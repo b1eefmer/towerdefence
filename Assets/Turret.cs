@@ -9,6 +9,7 @@ public class Turret : MonoBehaviour
     [SerializeField] private LayerMask enemyMask;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firingPoint;
+    [SerializeField] private AudioSource shootSound;
 
 
     [Header("Attributes")]
@@ -51,6 +52,8 @@ public class Turret : MonoBehaviour
         GameObject bulletObj = Instantiate(bulletPrefab, firingPoint.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
         bulletScript.SetTarget(target);
+
+        shootSound.Play();
         Debug.Log("Shoot");
     }
     private void FindTarget () 
