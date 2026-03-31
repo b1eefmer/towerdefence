@@ -74,7 +74,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3656807605993658195}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e5e2b0f86ba4e64b987e663180f61b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 351545334f21aaa4da6351c46131d253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
   turretRotationPoint: {fileID: 5752779813936016228}

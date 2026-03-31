@@ -181,6 +181,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 2929124418947253556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1cd3c0a3f4041841b73be0dd01151f5, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e6ac6c82fce7bc4785ac41b4f352cbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  hitPoint: 2
+  currencyWorth: 50
