@@ -2769,17 +2769,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 166426126037452027, guid: e74553254d603014ca60d43d457ed95b, type: 3}
+      propertyPath: targetingRange
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 3656807605993658195, guid: e74553254d603014ca60d43d457ed95b, type: 3}
       propertyPath: m_Name
       value: Turret
       objectReference: {fileID: 0}
     - target: {fileID: 5870158168831028141, guid: e74553254d603014ca60d43d457ed95b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5870158168831028141, guid: e74553254d603014ca60d43d457ed95b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 4.7
       objectReference: {fileID: 0}
     - target: {fileID: 5870158168831028141, guid: e74553254d603014ca60d43d457ed95b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3612,7 +3616,7 @@ Camera:
   far clip plane: 1000
   field of view: 34
   orthographic: 1
-  orthographic size: 13
+  orthographic size: 14
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -14362,5 +14366,5 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 1593068758}
   - {fileID: 622046920}
-  - {fileID: 1367877840242006529}
   - {fileID: 849031980}
+  - {fileID: 399389837}
