@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 5870158168831028141}
   - component: {fileID: 166426126037452027}
   m_Layer: 0
-  m_Name: Turret
+  m_Name: Test Turret
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,13 +77,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351545334f21aaa4da6351c46131d253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  turretRotationPoint: {fileID: 5752779813936016228}
+  turretRotationPoint: {fileID: 5276334864537106002}
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
   bulletPrefab: {fileID: 6077396348356978284, guid: 8dccc9288eb7e574ea5d0e662b82877b, type: 3}
   firingPoint: {fileID: 641738703624222233}
-  targetingRange: 3
+  targetingRange: 10
   rotationSpeed: 200
   bps: 1
 --- !u!1 &6406900066950744080
@@ -201,7 +201,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -539579915749326718, guid: eda9e9fe41cb15a439e020dcfe95e7b9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7202339, g: 0, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -292,7 +292,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 8195469170884960449, guid: eda9e9fe41cb15a439e020dcfe95e7b9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0.8807936, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

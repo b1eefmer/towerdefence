@@ -13,6 +13,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float enemiesPerSecond = 0.5f;
     [SerializeField] private float timeBetweenWaves = 5f;
     [SerializeField] private float difficultyScalingFactor = 0.75f;
+    [SerializeField] private float enemiesPerSecondCap = 15f;
 
     [Header("Events")]
     public static UnityEvent onEnemyDestroy = new UnityEvent();
@@ -22,6 +23,7 @@ public class EnemySpawner : MonoBehaviour
     private float timeSinceLastSpawn;
     private int enemiesAlive;
     private int enemiesLeftToSpawn;
+    private float eps; // enemies Per second
     private bool isSpawning = false;
     private void Awake()
     {
@@ -37,7 +39,7 @@ public class EnemySpawner : MonoBehaviour
 
         timeSinceLastSpawn += Time.deltaTime;
 
-        if (timeSinceLastSpawn > (1f /  enemiesPerSecond) && (enemiesLeftToSpawn>0))
+        if (timeSinceLastSpawn > (1f /  eps) && (enemiesLeftToSpawn>0))
         {
             SpawnEnemy();
             enemiesLeftToSpawn--;
@@ -52,7 +54,8 @@ public class EnemySpawner : MonoBehaviour
     }
     private void SpawnEnemy()
     {
-        GameObject prefabToSpawn = enemyPrefabs[0];
+        int index = Random.Range(0, enemyPrefabs.Length);
+        GameObject prefabToSpawn = enemyPrefabs[index];
         Instantiate(prefabToSpawn, LevelMananger.main.startPoint.position, Quaternion.identity);
 
     }
@@ -65,6 +68,7 @@ public class EnemySpawner : MonoBehaviour
         yield return new WaitForSeconds(timeBetweenWaves);
         isSpawning = true;
         enemiesLeftToSpawn = EnemiesPerWave();
+        eps = EnemiesPerSecond();
     }
 
     private void EndWave()
@@ -79,5 +83,8 @@ public class EnemySpawner : MonoBehaviour
     {
         return Mathf.RoundToInt(baseEnemies * Mathf.Pow(currentWave, difficultyScalingFactor));
     }
-    // Update is called once per frame
+    private float EnemiesPerSecond()
+    {
+        return Mathf.Clamp(enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor), 0, enemiesPerSecondCap);
+    }
 }
