@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Turret : MonoBehaviour
 {
@@ -10,22 +11,31 @@ public class Turret : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firingPoint;
     [SerializeField] private AudioSource shootSound;
-
+    [SerializeField] private GameObject upgradeUI;
+    [SerializeField] private Button upgradeButton;
 
     [Header("Attributes")]
     [SerializeField] private float targetingRange = 5f;
     [SerializeField] private float rotationSpeed = 200f;
-    [SerializeField] private float bps = 1f; //BULLETS PER SECOND
+    [SerializeField] private float bps = 1f; 
+    [SerializeField] private int baseUpgradeCost = 100;
+
+    private float bpsBase;
+    private float targetingRangeBase;
 
     private Transform target;
     private float timeUntilFire;
+
+    private int level = 1;
     void Start()
     {
+        bpsBase = bps;
+        targetingRangeBase = targetingRange;
 
+        upgradeButton.onClick.AddListener(Upgrade);
     }
 
-    // Update is called once per frame
-    private void Update() 
+    private void Update () 
     {
         if (target == null) 
         {
@@ -47,7 +57,7 @@ public class Turret : MonoBehaviour
             }
         }
     }
-    private void Shoot()
+    private void Shoot ()
     {
         GameObject bulletObj = Instantiate(bulletPrefab, firingPoint.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
@@ -65,18 +75,55 @@ public class Turret : MonoBehaviour
             target = hits[0].transform;
         }
     }
-    private bool CheckTargetIsInRange()
+    private bool CheckTargetIsInRange ()
     {
         return Vector2.Distance(target.position, transform.position) <= targetingRange;
     }
-    private void RotateTowardsTarget() 
+    private void RotateTowardsTarget () 
     {
         float angle = Mathf.Atan2(target.position.y - transform.position.y, target.position.x - transform.position.x) * Mathf.Rad2Deg - 90f;
 
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
         turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed*Time.deltaTime);
     }
-    private void OnDrawGizmosSelected()
+    public void OpenUpgradeUI ()
+    {
+        upgradeUI.SetActive(true);
+    }
+    public void CloseUpgradeUI()
+    {
+        upgradeUI.SetActive(false);
+        UIManager.main.SetHoveringState(false);
+    }
+    public void Upgrade ()
+    {
+        if (CalculateCost() > LevelMananger.main.currency) return;
+
+        LevelMananger.main.SpendCurrency(CalculateCost());
+
+        level++;
+
+        bps = CalculateBPS();
+        //targetingRange = CalculateRange();
+
+        CloseUpgradeUI();
+        Debug.Log("New BPS: " + bps);
+        //Debug.Log("New Range: " + targetingRange);
+        Debug.Log("New Cost: " + CalculateCost());
+    }
+    private int CalculateCost ()
+    {
+        return Mathf.RoundToInt(baseUpgradeCost * Mathf.Pow(level, 0.8f));
+    }
+    private float CalculateBPS()
+    {
+        return bpsBase * Mathf.Pow(level, 0.6f);
+    }
+    private float CalculateRange()
+    {
+        return targetingRangeBase * Mathf.Pow(level, 0.4f);
+    }
+    private void OnDrawGizmosSelected ()
     {
         Handles.color = Color.green;
         Handles.DrawWireDisc(transform.position, transform.forward, targetingRange);

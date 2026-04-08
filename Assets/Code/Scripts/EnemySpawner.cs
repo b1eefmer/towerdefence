@@ -15,18 +15,27 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private WinnerUI winnerUI;
 
     [Header("Attributes")]
-    [SerializeField] private int baseEnemies = 8;
-    [SerializeField] private float enemiesPerSecond = 0.5f;
     [SerializeField] private float timeBetweenWaves = 5f;
-    [SerializeField] private float difficultyScalingFactor = 0.75f;
-    [SerializeField] private float enemiesPerSecondCap = 15f;
     [SerializeField] private int maxWaves = 10;
+    [SerializeField] private int currencyIncome = 30;      
+
+    
+    private int[][] wavePlan = new int[][]
+    {
+        new int[] { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, // Wave 1
+        new int[] { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 }, // Wave 2
+        new int[] { 2,2 },                            // Wave 3
+        new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1, 2,2 }, // Wave 4
+        new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1,1, 2,2,2 }, // Wave 5
+        new int[] { 0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1, 2,2,2,2,2 }, // Wave 6
+        new int[] { 2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1 }, // Wave 7
+        new int[] { 2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1 }, // Wave 8
+        new int[] { 2,2,2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1 }, // Wave 9
+        new int[] { 2,2,2,2,2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1 } // Wave 10
+    };
 
     [Header("Events")]
     public static UnityEvent onEnemyDestroy = new UnityEvent();
-    public int GetTotalKills() { return totalKills; }
-    public int GetTotalGold() { return totalGoldEarned; }
-    public float GetGameTime() { return Time.time - gameStartTime; }
 
     private int currentWave = 1;
     private float timeSinceLastSpawn;
@@ -34,11 +43,17 @@ public class EnemySpawner : MonoBehaviour
     private int enemiesLeftToSpawn;
     private float eps;
     private bool isSpawning = false;
+    private int spawnIndex = 0;
 
-    // STATYSTYKI GRY
+
     private int totalKills = 0;
     private int totalGoldEarned = 0;
     private float gameStartTime;
+
+    
+    public int GetTotalKills() { return totalKills; }
+    public int GetTotalGold() { return totalGoldEarned; }
+    public float GetGameTime() { return Time.time - gameStartTime; }
 
     private void Awake()
     {
@@ -47,7 +62,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        gameStartTime = Time.time;  
+        gameStartTime = Time.time;
         UpdateWaveUI();
         startButton.onClick.AddListener(StartWave);
         startButton.interactable = true;
@@ -78,14 +93,26 @@ public class EnemySpawner : MonoBehaviour
         startButton.gameObject.SetActive(false);
         timeSinceLastSpawn = 0f;
         isSpawning = true;
-        enemiesLeftToSpawn = EnemiesPerWave();
+
+        if (currentWave - 1 < wavePlan.Length)
+        {
+            enemiesLeftToSpawn = wavePlan[currentWave - 1].Length;
+            spawnIndex = 0;
+        }
+        else
+        {
+            enemiesLeftToSpawn = 0;
+        }
         eps = EnemiesPerSecond();
     }
 
     private void SpawnEnemy()
     {
-        int index = Random.Range(0, enemyPrefabs.Length);
-        Instantiate(enemyPrefabs[index], LevelMananger.main.startPoint.position, Quaternion.identity);
+        if (currentWave - 1 >= wavePlan.Length) return;
+        int enemyIndex = wavePlan[currentWave - 1][spawnIndex];
+        GameObject prefabToSpawn = enemyPrefabs[enemyIndex];
+        Instantiate(prefabToSpawn, LevelMananger.main.startPoint.position, Quaternion.identity);
+        spawnIndex++;
     }
 
     private void EnemyDestroyed()
@@ -93,10 +120,8 @@ public class EnemySpawner : MonoBehaviour
         enemiesAlive--;
     }
 
-   
     public static void AddStats(int goldEarned)
     {
-  
         EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
         if (spawner != null)
         {
@@ -108,6 +133,8 @@ public class EnemySpawner : MonoBehaviour
     private void EndWave()
     {
         isSpawning = false;
+        LevelMananger.main.IncreaseCurrency(currencyIncome);
+        totalGoldEarned += currencyIncome;
 
         if (currentWave >= maxWaves)
         {
@@ -144,13 +171,9 @@ public class EnemySpawner : MonoBehaviour
         waveText.text = $"Wave {currentWave} / {maxWaves}";
     }
 
-    private int EnemiesPerWave()
-    {
-        return Mathf.RoundToInt(baseEnemies * Mathf.Pow(currentWave, difficultyScalingFactor));
-    }
-
     private float EnemiesPerSecond()
     {
-        return Mathf.Clamp(enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor), 0, enemiesPerSecondCap);
+        
+        return 1.0f;
     }
 }

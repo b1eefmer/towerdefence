@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour
     [Header("Attributes")]
     [SerializeField] private float bulletSpeed = 5f;
     [SerializeField] private int bulletDamage = 1;
+    private bool hasHit = false;
     public void SetTarget(Transform _targer)
     {
         target = _targer;
@@ -23,7 +24,10 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D other)
     {
-        // Take Health From Enemy
+        if (hasHit) return;
+
+        hasHit = true;
+        
         other.gameObject.GetComponent<Health>().TakeDamage(bulletDamage);
         Destroy(gameObject);
     }
@@ -32,7 +36,6 @@ public class Bullet : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

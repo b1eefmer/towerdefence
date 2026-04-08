@@ -43,12 +43,12 @@ public class Health : MonoBehaviour
 
         if (hitPoint <= 0)
         {
-            // Nagroda za zabicie
+        
             EnemySpawner.onEnemyDestroy.Invoke();
             LevelMananger.main.IncreaseCurrency(currencyWorth);
             ShowFloatingText(currencyWorth);
 
-            // DODAJ STATYSTYKI
+            
             EnemySpawner.AddStats(currencyWorth);
 
             if (deathSound != null)

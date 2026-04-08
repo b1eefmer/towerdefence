@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   rb: {fileID: -5415581309653117769}
-  moveSpeed: 2
+  moveSpeed: 3
 --- !u!114 &-1730130295177453762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   hitPoint: 2
-  currencyWorth: 50
+  currencyWorth: 2
   spriteRenderer: {fileID: 7383514006656795777}
   hitColor: {r: 1, g: 1, b: 1, a: 1}
   hitFlashDuration: 0.1
