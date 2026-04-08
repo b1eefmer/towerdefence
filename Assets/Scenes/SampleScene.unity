@@ -23096,15 +23096,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
   enemyPrefabs:
   - {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+  - {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
   - {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
   waveText: {fileID: 75635824}
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}
-  baseEnemies: 10
-  enemiesPerSecond: 1
   timeBetweenWaves: 5
-  difficultyScalingFactor: 0.75
-  enemiesPerSecondCap: 15
   maxWaves: 10
   currencyIncome: 30
 --- !u!114 &1335786084
