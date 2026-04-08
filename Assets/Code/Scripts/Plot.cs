@@ -6,6 +6,9 @@ public class Plot : MonoBehaviour
     [Header("References")]
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Color hoverColor;
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource buySound;
     private GameObject tower;
     private Color startColor;
     private void Start()
@@ -33,6 +36,7 @@ public class Plot : MonoBehaviour
         }
 
         LevelMananger.main.SpendCurrency(towerToBuild.cost);
+        if (buySound != null) buySound.Play();
         tower = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
     }
     // Update is called once per frame

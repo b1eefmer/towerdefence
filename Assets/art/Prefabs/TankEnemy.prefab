@@ -186,3 +186,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   hitPoint: 4
   currencyWorth: 100
+  spriteRenderer: {fileID: 7383514006656795777}
+  hitColor: {r: 1, g: 1, b: 1, a: 1}
+  hitFlashDuration: 0.1
+  hitSparkPrefab: {fileID: 1646406499724943997, guid: 8bd843ad75f57e94fac206b24597398e, type: 3}
+  floatingTextPrefab: {fileID: 0}
+  hitSound: {fileID: 0}
+  deathSound: {fileID: 0}
