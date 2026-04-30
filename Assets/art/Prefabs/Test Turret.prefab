@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 351545334f21aaa4da6351c46131d253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  turretRotationPoint: {fileID: 5276334864537106002}
+  turretRotationPoint: {fileID: 0}
   enemyMask:
     serializedVersion: 2
     m_Bits: 64
