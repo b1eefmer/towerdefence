@@ -2830,7 +2830,6 @@ GameObject:
   - component: {fileID: 198940554}
   - component: {fileID: 198940553}
   - component: {fileID: 198940552}
-  - component: {fileID: 198940551}
   - component: {fileID: 198940550}
   - component: {fileID: 198940549}
   m_Layer: 5
@@ -2890,18 +2889,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0.8392157, g: 0.65882355, b: 0.2901961, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
---- !u!114 &198940551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 198940547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fa7e879781f9ae40bcad08f89cfd89e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RestartGame
 --- !u!114 &198940552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2945,7 +2932,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 198940553}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1335786085}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: PauseGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &198940553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8327,7 +8326,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607844, g: 0.9607844, b: 0.9607844, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -23057,6 +23056,7 @@ GameObject:
   - component: {fileID: 1335786083}
   - component: {fileID: 1335786082}
   - component: {fileID: 1335786084}
+  - component: {fileID: 1335786085}
   m_Layer: 0
   m_Name: LevelMananger
   m_TagString: Untagged
@@ -23163,6 +23163,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e14c665db9de633408b67747e9e33d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+--- !u!114 &1335786085
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335786076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a8c8e97bdba7447a1d3e3c923bd097, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseManager
 --- !u!1001 &1344690102
 PrefabInstance:
   m_ObjectHideFlags: 0
