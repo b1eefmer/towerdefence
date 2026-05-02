@@ -11,7 +11,7 @@ public class MainMenu : MonoBehaviour
 
     public void Options()
     {
-        Debug.Log("Options clicked");
+        SceneManager.LoadScene("OptionsScene");
     }
 
     public void QuitGame()
