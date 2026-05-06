@@ -59,6 +59,17 @@ public class Health : MonoBehaviour
         }
     }
 
+    public int GetCurrentHitPoints()
+    {
+        return hitPoint;
+    }
+
+    public void SetCurrentHitPoints(int newHitPoints)
+    {
+        hitPoint = Mathf.Max(1, newHitPoints);
+        isDestroyed = false;
+    }
+
     private IEnumerator FlashCoroutine()
     {
         spriteRenderer.color = hitColor;

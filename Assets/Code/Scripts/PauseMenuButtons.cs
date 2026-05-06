@@ -14,6 +14,11 @@ public class PauseMenuButtons : MonoBehaviour
         PauseManager.Instance.SaveGame();
     }
 
+    public void OnLoad()
+    {
+        PauseManager.Instance.LoadGame();
+    }
+
  
     public void OnBack()
     {

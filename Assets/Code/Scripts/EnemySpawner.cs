@@ -54,18 +54,38 @@ public class EnemySpawner : MonoBehaviour
     public int GetTotalKills() { return totalKills; }
     public int GetTotalGold() { return totalGoldEarned; }
     public float GetGameTime() { return Time.time - gameStartTime; }
+    public int GetCurrentWave() { return currentWave; }
+    public int GetEnemiesLeftToSpawn() { return enemiesLeftToSpawn; }
+    public int GetEnemiesAlive() { return enemiesAlive; }
+    public int GetSpawnIndex() { return spawnIndex; }
+    public float GetTimeSinceLastSpawn() { return timeSinceLastSpawn; }
+    public bool IsSpawning() { return isSpawning; }
 
     private void Awake()
     {
         onEnemyDestroy.AddListener(EnemyDestroyed);
+        ResolveReferences();
     }
 
     private void Start()
     {
+        ResolveReferences();
         gameStartTime = Time.time;
         UpdateWaveUI();
-        startButton.onClick.AddListener(StartWave);
+
+        if (startButton == null)
+        {
+            Debug.LogError("Start button is not assigned on EnemySpawner.");
+            return;
+        }
+
+        if (startButton.onClick.GetPersistentEventCount() == 0)
+        {
+            startButton.onClick.AddListener(StartWaveFromButton);
+        }
+
         startButton.interactable = true;
+        startButton.gameObject.SetActive(true);
     }
 
     private void Update()
@@ -84,6 +104,14 @@ public class EnemySpawner : MonoBehaviour
         if (enemiesAlive == 0 && enemiesLeftToSpawn == 0)
         {
             EndWave();
+        }
+    }
+
+    public void StartWaveFromButton()
+    {
+        if (!isSpawning)
+        {
+            StartWave();
         }
     }
 
@@ -122,7 +150,7 @@ public class EnemySpawner : MonoBehaviour
 
     public static void AddStats(int goldEarned)
     {
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
         if (spawner != null)
         {
             spawner.totalKills++;
@@ -168,6 +196,11 @@ public class EnemySpawner : MonoBehaviour
 
     private void UpdateWaveUI()
     {
+        if (waveText == null)
+        {
+            Debug.LogError("waveText is NULL!");
+            return;
+        }
         waveText.text = $"Wave {currentWave} / {maxWaves}";
     }
 
@@ -175,5 +208,84 @@ public class EnemySpawner : MonoBehaviour
     {
         
         return 1.0f;
+    }
+
+    public GameObject GetEnemyPrefabByName(string prefabName)
+    {
+        string normalizedName = NormalizeName(prefabName);
+
+        for (int i = 0; i < enemyPrefabs.Length; i++)
+        {
+            GameObject enemyPrefab = enemyPrefabs[i];
+            if (enemyPrefab != null && NormalizeName(enemyPrefab.name) == normalizedName)
+            {
+                return enemyPrefab;
+            }
+        }
+
+        return null;
+    }
+
+    public void RestoreState(
+        int restoredWave,
+        int restoredEnemiesLeftToSpawn,
+        int restoredEnemiesAlive,
+        int restoredSpawnIndex,
+        float restoredTimeSinceLastSpawn,
+        bool restoredIsSpawning,
+        int restoredTotalKills,
+        int restoredTotalGoldEarned,
+        float elapsedGameTime)
+    {
+        currentWave = Mathf.Clamp(restoredWave, 1, maxWaves);
+        enemiesLeftToSpawn = Mathf.Max(0, restoredEnemiesLeftToSpawn);
+        enemiesAlive = Mathf.Max(0, restoredEnemiesAlive);
+        spawnIndex = Mathf.Max(0, restoredSpawnIndex);
+        timeSinceLastSpawn = Mathf.Max(0f, restoredTimeSinceLastSpawn);
+        isSpawning = restoredIsSpawning;
+        totalKills = Mathf.Max(0, restoredTotalKills);
+        totalGoldEarned = Mathf.Max(0, restoredTotalGoldEarned);
+        gameStartTime = Time.time - Mathf.Max(0f, elapsedGameTime);
+        eps = EnemiesPerSecond();
+
+        UpdateWaveUI();
+
+        if (startButton != null)
+        {
+            bool showStartButton = !isSpawning && currentWave <= maxWaves;
+            startButton.interactable = showStartButton;
+            startButton.gameObject.SetActive(showStartButton);
+        }
+    }
+
+    private string NormalizeName(string objectName)
+    {
+        return objectName.Replace("(Clone)", "").Trim();
+    }
+
+    private void ResolveReferences()
+    {
+        if (waveText == null)
+        {
+            GameObject waveTextObject = GameObject.Find("WaveText");
+            if (waveTextObject != null)
+            {
+                waveText = waveTextObject.GetComponent<TextMeshProUGUI>();
+            }
+        }
+
+        if (startButton == null)
+        {
+            GameObject startButtonObject = GameObject.Find("Start");
+            if (startButtonObject != null)
+            {
+                startButton = startButtonObject.GetComponent<Button>();
+            }
+        }
+
+        if (winnerUI == null)
+        {
+            winnerUI = FindFirstObjectByType<WinnerUI>(FindObjectsInactive.Include);
+        }
     }
 }

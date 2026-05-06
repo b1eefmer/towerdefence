@@ -49,6 +49,18 @@ public class BaseHealth : MonoBehaviour
         }
     }
 
+    public int GetCurrentLives()
+    {
+        return currentLives;
+    }
+
+    public void RestoreLives(int lives)
+    {
+        currentLives = Mathf.Clamp(lives, 0, maxLives);
+        isGameOver = false;
+        UpdateHearts();
+    }
+
     private void UpdateHearts()
     {
         for (int i = 0; i < hearts.Length; i++)
@@ -62,7 +74,7 @@ public class BaseHealth : MonoBehaviour
 
         Debug.Log("GAME OVER");
 
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
         int totalKills = 0;
         int totalGold = 0;
         float gameTime = 0f;
