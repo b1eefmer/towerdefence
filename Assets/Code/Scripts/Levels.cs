@@ -5,7 +5,6 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
 
- 
     private string[] levelScenes = new string[] { "SampleScene", "FireScene" };
 
     void Awake()
@@ -23,15 +22,14 @@ public class LevelManager : MonoBehaviour
 
     public void LoadNextLevel()
     {
-
         Time.timeScale = 1f;
 
+       
         Scene pauseScene = SceneManager.GetSceneByName("PauseScene");
         if (pauseScene.isLoaded)
         {
             SceneManager.UnloadSceneAsync(pauseScene);
         }
-
 
         string currentScene = SceneManager.GetActiveScene().name;
         int currentIndex = System.Array.IndexOf(levelScenes, currentScene);
@@ -39,12 +37,29 @@ public class LevelManager : MonoBehaviour
 
         if (nextIndex < levelScenes.Length)
         {
-            SceneManager.LoadScene(levelScenes[nextIndex]);
+            string nextSceneName = levelScenes[nextIndex];
+
+           
+            LevelTransition teleport = FindObjectOfType<LevelTransition>();
+            if (teleport != null)
+            {
+                teleport.StartTeleport(nextSceneName);
+            }
+            else
+            {
+                
+                SceneManager.LoadScene(nextSceneName);
+            }
         }
         else
         {
             Debug.Log("Koniec gry – brak dalszych poziomów");
-        
         }
+    }
+
+    
+    public void LoadSceneDirectly(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }
