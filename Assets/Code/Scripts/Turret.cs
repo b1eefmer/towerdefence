@@ -27,12 +27,19 @@ public class Turret : MonoBehaviour
     private float timeUntilFire;
 
     private int level = 1;
+    private void Awake()
+    {
+        CacheBaseStats();
+    }
+
     void Start()
     {
-        bpsBase = bps;
-        targetingRangeBase = targetingRange;
+        CacheBaseStats();
 
-        upgradeButton.onClick.AddListener(Upgrade);
+        if (upgradeButton != null)
+        {
+            upgradeButton.onClick.AddListener(Upgrade);
+        }
     }
 
     private void Update () 
@@ -111,6 +118,32 @@ public class Turret : MonoBehaviour
         //Debug.Log("New Range: " + targetingRange);
         Debug.Log("New Cost: " + CalculateCost());
     }
+
+    public int GetLevel()
+    {
+        return level;
+    }
+
+    public void SetLevel(int newLevel)
+    {
+        CacheBaseStats();
+        level = Mathf.Max(1, newLevel);
+        bps = CalculateBPS();
+    }
+
+    private void CacheBaseStats()
+    {
+        if (bpsBase <= 0f)
+        {
+            bpsBase = bps;
+        }
+
+        if (targetingRangeBase <= 0f)
+        {
+            targetingRangeBase = targetingRange;
+        }
+    }
+
     private int CalculateCost ()
     {
         return Mathf.RoundToInt(baseUpgradeCost * Mathf.Pow(level, 0.8f));

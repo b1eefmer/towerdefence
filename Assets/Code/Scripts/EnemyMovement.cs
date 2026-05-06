@@ -12,16 +12,20 @@ public class EnemyMovement : MonoBehaviour
     private int pathIndex = 0;
 
     private float baseSpeed;
+    private bool stateRestored;
 
     private BaseHealth baseHealth; 
 
     void Start()
     {
-        baseSpeed = moveSpeed;
-        target = LevelMananger.main.path[pathIndex];
+        if (!stateRestored)
+        {
+            baseSpeed = moveSpeed;
+            target = LevelMananger.main.path[pathIndex];
+        }
 
         
-        baseHealth = FindObjectOfType<BaseHealth>();
+        baseHealth = FindFirstObjectByType<BaseHealth>();
     }
 
     void Update()
@@ -63,5 +67,34 @@ public class EnemyMovement : MonoBehaviour
     public void ResetSpeed()
     {
         moveSpeed = baseSpeed;
+    }
+
+    public int GetPathIndex()
+    {
+        return pathIndex;
+    }
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
+
+    public float GetBaseSpeed()
+    {
+        return baseSpeed;
+    }
+
+    public void RestoreState(int restoredPathIndex, float restoredMoveSpeed, float restoredBaseSpeed)
+    {
+        if (LevelMananger.main == null || LevelMananger.main.path.Length == 0)
+        {
+            return;
+        }
+
+        pathIndex = Mathf.Clamp(restoredPathIndex, 0, LevelMananger.main.path.Length - 1);
+        moveSpeed = Mathf.Max(0.01f, restoredMoveSpeed);
+        baseSpeed = Mathf.Max(0.01f, restoredBaseSpeed);
+        target = LevelMananger.main.path[pathIndex];
+        stateRestored = true;
     }
 }

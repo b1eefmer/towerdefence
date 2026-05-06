@@ -22,6 +22,11 @@ public class LevelMananger : MonoBehaviour
         currency += amount;
     }
 
+    public void SetCurrency(int amount)
+    {
+        currency = Mathf.Max(0, amount);
+    }
+
     public bool SpendCurrency(int amount)
     {
         if (amount <= currency)

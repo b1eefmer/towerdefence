@@ -21,6 +21,47 @@ public class BuildMananger : MonoBehaviour
     {
         selectedTower = _selectedTower;
     }
+
+    public GameObject GetTowerPrefab(int towerIndex)
+    {
+        if (towerIndex < 0 || towerIndex >= towers.Length)
+        {
+            return null;
+        }
+
+        return towers[towerIndex].prefab;
+    }
+
+    public int GetTowerIndexByInstance(GameObject towerInstance)
+    {
+        if (towerInstance == null)
+        {
+            return -1;
+        }
+
+        return GetTowerIndexByPrefabName(towerInstance.name);
+    }
+
+    public int GetTowerIndexByPrefabName(string prefabName)
+    {
+        string normalizedName = NormalizeName(prefabName);
+
+        for (int i = 0; i < towers.Length; i++)
+        {
+            GameObject prefab = towers[i].prefab;
+            if (prefab != null && NormalizeName(prefab.name) == normalizedName)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private string NormalizeName(string objectName)
+    {
+        return objectName.Replace("(Clone)", "").Trim();
+    }
     void Start()
     {
         

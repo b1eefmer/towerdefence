@@ -32,8 +32,12 @@ public class PauseManager : MonoBehaviour
 
     public void SaveGame()
     {
-        Debug.Log("Zapisano stan gry");
-       
+        SaveSystem.SaveGame();
+    }
+
+    public void LoadGame()
+    {
+        SaveSystem.LoadGame();
     }
 
     public void BackToMenu()
