@@ -61,6 +61,28 @@ public class BaseHealth : MonoBehaviour
         UpdateHearts();
     }
 
+    public void ConfigureRuntimeSetup(Image[] runtimeHearts, int runtimeMaxLives = -1, GameOverUI runtimeGameOverUi = null)
+    {
+        if (runtimeMaxLives > 0)
+        {
+            maxLives = runtimeMaxLives;
+        }
+
+        if (runtimeHearts != null && runtimeHearts.Length > 0)
+        {
+            hearts = runtimeHearts;
+        }
+
+        if (runtimeGameOverUi != null)
+        {
+            gameOverUI = runtimeGameOverUi;
+        }
+
+        currentLives = maxLives;
+        isGameOver = false;
+        UpdateHearts();
+    }
+
     private void UpdateHearts()
     {
         for (int i = 0; i < hearts.Length; i++)

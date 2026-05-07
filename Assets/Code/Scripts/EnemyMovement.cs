@@ -10,6 +10,7 @@ public class EnemyMovement : MonoBehaviour
 
     private Transform target;
     private int pathIndex = 0;
+    private Transform[] activePath;
 
     private float baseSpeed;
     private bool stateRestored;
@@ -21,7 +22,11 @@ public class EnemyMovement : MonoBehaviour
         if (!stateRestored)
         {
             baseSpeed = moveSpeed;
-            target = LevelMananger.main.path[pathIndex];
+            activePath = LevelMananger.main.path;
+            if (activePath != null && activePath.Length > 0)
+            {
+                target = activePath[pathIndex];
+            }
         }
 
         
@@ -30,11 +35,16 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        if (target == null)
+        {
+            return;
+        }
+
         if (Vector2.Distance(target.position, transform.position) <= 0.1f)
         {
             pathIndex++;
 
-            if (pathIndex == LevelMananger.main.path.Length)
+            if (activePath == null || pathIndex == activePath.Length)
             {
           
                 if (baseHealth != null)
@@ -48,13 +58,19 @@ public class EnemyMovement : MonoBehaviour
             }
             else
             {
-                target = LevelMananger.main.path[pathIndex];
+                target = activePath[pathIndex];
             }
         }
     }
 
     private void FixedUpdate()
     {
+        if (target == null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            return;
+        }
+
         Vector2 direction = (target.position - transform.position).normalized;
         rb.linearVelocity = direction * moveSpeed;
     }
@@ -91,10 +107,34 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
+        activePath = LevelMananger.main.path;
         pathIndex = Mathf.Clamp(restoredPathIndex, 0, LevelMananger.main.path.Length - 1);
         moveSpeed = Mathf.Max(0.01f, restoredMoveSpeed);
         baseSpeed = Mathf.Max(0.01f, restoredBaseSpeed);
-        target = LevelMananger.main.path[pathIndex];
+        target = activePath[pathIndex];
+        stateRestored = true;
+    }
+
+    public void SetHardcodedPath(Transform spawnPoint, Transform[] waypoints)
+    {
+        if (waypoints == null || waypoints.Length == 0)
+        {
+            return;
+        }
+
+        if (spawnPoint != null)
+        {
+            transform.position = spawnPoint.position;
+        }
+        else
+        {
+            transform.position = waypoints[0].position;
+        }
+
+        activePath = waypoints;
+        pathIndex = 0;
+        target = activePath[pathIndex];
+        baseSpeed = moveSpeed;
         stateRestored = true;
     }
 }
