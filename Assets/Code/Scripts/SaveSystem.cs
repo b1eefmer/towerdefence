@@ -132,10 +132,9 @@ public static class SaveSystem
         pendingLoadData = loadedData;
         Time.timeScale = 1f;
 
-        Scene pauseScene = SceneManager.GetSceneByName("PauseScene");
-        if (pauseScene.isLoaded)
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
         {
-            SceneManager.UnloadSceneAsync(pauseScene);
+            PauseManager.Instance.ResumeGame();
         }
 
         SceneManager.LoadScene(loadedData.sceneName);
@@ -272,15 +271,6 @@ public static class SaveSystem
 
     private static string GetGameplaySceneName()
     {
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            Scene scene = SceneManager.GetSceneAt(i);
-            if (scene.isLoaded && scene.name != "PauseScene")
-            {
-                return scene.name;
-            }
-        }
-
         return SceneManager.GetActiveScene().name;
     }
 

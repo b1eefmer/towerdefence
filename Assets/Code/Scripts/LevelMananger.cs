@@ -80,7 +80,7 @@ public class LevelMananger : MonoBehaviour
             return;
         }
 
-        if (SceneManager.GetSceneByName("PauseScene").isLoaded)
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
         {
             return;
         }

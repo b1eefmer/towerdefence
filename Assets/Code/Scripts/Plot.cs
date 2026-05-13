@@ -70,6 +70,10 @@ public class Plot : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
+        {
+            return;
+        }
 
         if (UIManager.main != null && (UIManager.main.IsHoveringUI() || UIManager.main.IsPointerOverBlockingUI()))
         {

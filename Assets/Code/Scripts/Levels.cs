@@ -1,13 +1,13 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;
 
-    private string[] levelScenes = new string[] { "SampleScene", "FireScene" };
+    private readonly string[] levelScenes = { "SampleScene", "FireScene" };
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
@@ -24,11 +24,9 @@ public class LevelManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-       
-        Scene pauseScene = SceneManager.GetSceneByName("PauseScene");
-        if (pauseScene.isLoaded)
+        if (PauseManager.Instance != null && PauseManager.Instance.IsPaused)
         {
-            SceneManager.UnloadSceneAsync(pauseScene);
+            PauseManager.Instance.ResumeGame();
         }
 
         string currentScene = SceneManager.GetActiveScene().name;
@@ -38,26 +36,22 @@ public class LevelManager : MonoBehaviour
         if (nextIndex < levelScenes.Length)
         {
             string nextSceneName = levelScenes[nextIndex];
-
-           
-            LevelTransition teleport = FindObjectOfType<LevelTransition>();
+            LevelTransition teleport = FindFirstObjectByType<LevelTransition>();
             if (teleport != null)
             {
                 teleport.StartTeleport(nextSceneName);
             }
             else
             {
-                
                 SceneManager.LoadScene(nextSceneName);
             }
         }
         else
         {
-            Debug.Log("Koniec gry – brak dalszych poziomów");
+            Debug.Log("No more levels available.");
         }
     }
 
-    
     public void LoadSceneDirectly(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
