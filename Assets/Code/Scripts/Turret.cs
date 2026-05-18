@@ -88,6 +88,8 @@ public class Turret : MonoBehaviour
     }
     public void OpenUpgradeUI ()
     {
+        if (PauseMenuController.IsPaused) return;
+
         upgradeUI.SetActive(true);
     }
     public void CloseUpgradeUI()
@@ -97,6 +99,8 @@ public class Turret : MonoBehaviour
     }
     public void Upgrade ()
     {
+        if (PauseMenuController.IsPaused) return;
+
         if (CalculateCost() > LevelMananger.main.currency) return;
 
         LevelMananger.main.SpendCurrency(CalculateCost());

@@ -20,6 +20,8 @@ public class Plot : MonoBehaviour
 
     private void OnMouseEnter()
     {
+        if (PauseMenuController.IsPaused) return;
+
         sr.color = hoverColor;
     }
 
@@ -30,6 +32,7 @@ public class Plot : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (PauseMenuController.IsPaused) return;
         
         if (UIManager.main != null && UIManager.main.IsHoveringUI()) return;
 

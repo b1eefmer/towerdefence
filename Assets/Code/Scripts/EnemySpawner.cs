@@ -60,6 +60,11 @@ public class EnemySpawner : MonoBehaviour
         onEnemyDestroy.AddListener(EnemyDestroyed);
     }
 
+    private void OnDestroy()
+    {
+        onEnemyDestroy.RemoveListener(EnemyDestroyed);
+    }
+
     private void Start()
     {
         gameStartTime = Time.time;

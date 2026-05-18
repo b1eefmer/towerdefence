@@ -19,6 +19,8 @@ public class BuildMananger : MonoBehaviour
     }
     public void SetSelectedTower(int _selectedTower)
     {
+        if (PauseMenuController.IsPaused) return;
+
         selectedTower = _selectedTower;
     }
     void Start()
