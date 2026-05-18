@@ -9,6 +9,8 @@ public class WinnerUI : MonoBehaviour
     public TextMeshProUGUI goldText;
     public TextMeshProUGUI timeText;
 
+    [SerializeField] private string nextLevelSceneName;
+
     void Start()
     {
         if (panel != null)
@@ -18,7 +20,7 @@ public class WinnerUI : MonoBehaviour
     public void ShowWinner(int kills, int gold, float gameTime)
     {
         if (killsText != null) killsText.text = $"Zabici: {kills}";
-        if (goldText != null) goldText.text = $"Z³oto: {gold}";
+        if (goldText != null) goldText.text = $"Zloto: {gold}";
         if (timeText != null) timeText.text = $"Czas: {gameTime:F1} s";
 
         panel.SetActive(true);
@@ -29,6 +31,18 @@ public class WinnerUI : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void NextLevel()
+    {
+        if (string.IsNullOrWhiteSpace(nextLevelSceneName))
+        {
+            Debug.LogWarning("Next level scene name is not set.");
+            return;
+        }
+
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(nextLevelSceneName);
     }
 
     public void QuitGame()

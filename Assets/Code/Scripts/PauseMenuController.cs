@@ -12,10 +12,8 @@ public class PauseMenuController : MonoBehaviour
 
     private void Awake()
     {
-        IsPaused = false;
         Time.timeScale = 1f;
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
+        SetPaused(false);
     }
 
     private void Update()
@@ -29,27 +27,34 @@ public class PauseMenuController : MonoBehaviour
 
     public void PauseGame()
     {
-        isPaused = true;
-        IsPaused = true;
-        if (pausePanel != null)
-            pausePanel.SetActive(true);
-        Time.timeScale = 0f;
+        SetPaused(true);
     }
 
     public void ResumeGame()
     {
-        isPaused = false;
-        IsPaused = false;
-        if (pausePanel != null)
-            pausePanel.SetActive(false);
-        Time.timeScale = 1f;
+        SetPaused(false);
     }
 
     public void ReturnToMainMenu()
     {
-        isPaused = false;
+        SetPaused(false);
+        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private void OnDisable()
+    {
         IsPaused = false;
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    private void SetPaused(bool paused)
+    {
+        isPaused = paused;
+        IsPaused = paused;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(paused);
+
+        Time.timeScale = paused ? 0f : 1f;
     }
 }
