@@ -17,9 +17,9 @@ public class GameOverUI : MonoBehaviour
 
     public void ShowGameOver(int kills, int gold, float gameTime)
     {
-        if (killsText != null) killsText.text = $"Zabici: {kills}";
-        if (goldText != null) goldText.text = $"Z³oto: {gold}";
-        if (timeText != null) timeText.text = $"Czas: {gameTime:F1} s";
+        if (killsText != null) killsText.text = $"Kills: {kills}";
+        if (goldText != null) goldText.text = $"Gold: {gold}";
+        if (timeText != null) timeText.text = $"Time: {gameTime:F1} s";
 
         panel.SetActive(true);
         Time.timeScale = 0f;
