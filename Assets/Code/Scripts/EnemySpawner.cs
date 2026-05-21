@@ -22,7 +22,7 @@ public class EnemySpawner : MonoBehaviour
     
     private int[][] wavePlan = new int[][]
     {
-        new int[] { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, // Wave 1
+        new int[] { 0,2,2,2,0,0,0,0,0,0,0,0,0,0,0 }, // Wave 1
         new int[] { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 }, // Wave 2
         new int[] { 2,2 },                            // Wave 3
         new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1, 2,2 }, // Wave 4

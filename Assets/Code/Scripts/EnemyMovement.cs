@@ -4,23 +4,30 @@ public class EnemyMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Attributes")]
     [SerializeField] private float moveSpeed = 2f;
+    [Tooltip("Sprite art faces right by default. Enable if the art faces left.")]
+    [SerializeField] private bool spriteFacesLeftByDefault = false;
+    [Tooltip("Minimum horizontal speed required before the sprite flips. Prevents jitter on near-vertical paths.")]
+    [SerializeField] private float flipDeadzone = 0.05f;
 
     private Transform target;
     private int pathIndex = 0;
 
     private float baseSpeed;
 
-    private BaseHealth baseHealth; 
+    private BaseHealth baseHealth;
 
     void Start()
     {
         baseSpeed = moveSpeed;
         target = LevelMananger.main.path[pathIndex];
 
-        
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         baseHealth = FindObjectOfType<BaseHealth>();
     }
 
@@ -53,6 +60,17 @@ public class EnemyMovement : MonoBehaviour
     {
         Vector2 direction = (target.position - transform.position).normalized;
         rb.linearVelocity = direction * moveSpeed;
+
+        UpdateFacing(direction.x);
+    }
+
+    private void UpdateFacing(float horizontalDir)
+    {
+        if (spriteRenderer == null) return;
+        if (Mathf.Abs(horizontalDir) < flipDeadzone) return;
+
+        bool movingLeft = horizontalDir < 0f;
+        spriteRenderer.flipX = movingLeft ^ spriteFacesLeftByDefault;
     }
 
     public void UpdateSpeed(float newSpeed)

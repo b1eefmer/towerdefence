@@ -171,7 +171,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   rb: {fileID: -5415581309653117769}
+  spriteRenderer: {fileID: 7383514006656795777}
   moveSpeed: 4.5
+  spriteFacesLeftByDefault: 0
+  flipDeadzone: 0.05
 --- !u!114 &-1730130295177453762
 MonoBehaviour:
   m_ObjectHideFlags: 0
