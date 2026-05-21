@@ -28,7 +28,7 @@ public class EnemyMovement : MonoBehaviour
         if (spriteRenderer == null)
             spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-        baseHealth = FindObjectOfType<BaseHealth>();
+        baseHealth = FindFirstObjectByType<BaseHealth>();
     }
 
     void Update()

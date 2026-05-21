@@ -18,6 +18,8 @@ public class PauseMenuController : MonoBehaviour
 
     private void Update()
     {
+        if (Turret.IsAwaitingDirection) return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused) ResumeGame();

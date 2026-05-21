@@ -17,7 +17,15 @@ public class EnemySpawner : MonoBehaviour
     [Header("Attributes")]
     [SerializeField] private float timeBetweenWaves = 5f;
     [SerializeField] private int maxWaves = 10;
-    [SerializeField] private int currencyIncome = 30;      
+    [SerializeField] private int currencyIncome = 30;
+
+    [Header("Spawn Rate")]
+    [Tooltip("Base spawn rate on wave 1.")]
+    [SerializeField] private float enemiesPerSecond = 0.5f;
+    [Tooltip("Exponent used to grow EPS per wave. Higher = faster ramp-up.")]
+    [SerializeField] private float difficultyScalingFactor = 0.75f;
+    [Tooltip("Hard ceiling for spawn rate at high waves.")]
+    [SerializeField] private float enemiesPerSecondCap = 15f;
 
     
     private int[][] wavePlan = new int[][]
@@ -127,7 +135,7 @@ public class EnemySpawner : MonoBehaviour
 
     public static void AddStats(int goldEarned)
     {
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
         if (spawner != null)
         {
             spawner.totalKills++;
@@ -178,7 +186,9 @@ public class EnemySpawner : MonoBehaviour
 
     private float EnemiesPerSecond()
     {
-        
-        return 1.0f;
+        return Mathf.Clamp(
+            enemiesPerSecond * Mathf.Pow(currentWave, difficultyScalingFactor),
+            0f,
+            enemiesPerSecondCap);
     }
 }

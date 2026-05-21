@@ -21,6 +21,7 @@ public class Plot : MonoBehaviour
     private void OnMouseEnter()
     {
         if (PauseMenuController.IsPaused) return;
+        if (Turret.IsAwaitingDirection) return;
 
         sr.color = hoverColor;
     }
@@ -33,10 +34,9 @@ public class Plot : MonoBehaviour
     private void OnMouseDown()
     {
         if (PauseMenuController.IsPaused) return;
-        
         if (UIManager.main != null && UIManager.main.IsHoveringUI()) return;
+        if (Turret.IsAwaitingDirection) return;
 
-        
         if (towerObj != null)
         {
             if (turret != null)
@@ -51,10 +51,29 @@ public class Plot : MonoBehaviour
             return;
         }
 
-        LevelMananger.main.SpendCurrency(towerToBuild.cost);
-        if (buySound != null) buySound.Play();
-
         towerObj = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
         turret = towerObj.GetComponent<Turret>();
+
+        if (turret != null)
+        {
+            turret.BeginPlacement(towerToBuild.cost, this);
+            if (buySound != null) buySound.Play();
+        }
+        else
+        {
+            if (towerToBuild.cost <= LevelMananger.main.currency)
+                LevelMananger.main.SpendCurrency(towerToBuild.cost);
+            if (buySound != null) buySound.Play();
+        }
+    }
+
+    /// <summary>
+    /// Called by Turret when the player cancels placement. Frees the plot for another purchase.
+    /// </summary>
+    public void ClearTower()
+    {
+        towerObj = null;
+        turret = null;
+        sr.color = startColor;
     }
 }

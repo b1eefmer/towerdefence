@@ -62,7 +62,7 @@ public class BaseHealth : MonoBehaviour
 
         Debug.Log("GAME OVER");
 
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
         int totalKills = 0;
         int totalGold = 0;
         float gameTime = 0f;
