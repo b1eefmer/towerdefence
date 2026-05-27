@@ -8,12 +8,16 @@ public class BuildMananger : MonoBehaviour
     [SerializeField] private Tower[] towers;
 
     private int selectedTower = 0;
+    private PlacementUIController placementUI;
 
     public Plot ActivePlacingPlot { get; private set; }
 
     private void Awake()
     {
         main = this;
+        placementUI = GetComponent<PlacementUIController>();
+        if (placementUI == null)
+            placementUI = gameObject.AddComponent<PlacementUIController>();
     }
 
     public Tower GetSelectedTower () 
@@ -45,12 +49,22 @@ public class BuildMananger : MonoBehaviour
             ActivePlacingPlot.CancelPlacement();
 
         ActivePlacingPlot = plot;
+        placementUI.Show();
     }
 
     public void CompletePlacement(Plot plot)
     {
         if (ActivePlacingPlot == plot)
+        {
             ActivePlacingPlot = null;
+            placementUI.Hide();
+        }
+    }
+
+    public void ConfirmActivePlacement()
+    {
+        if (ActivePlacingPlot != null)
+            ActivePlacingPlot.ConfirmPlacement();
     }
 
     public bool CancelActivePlacement()
@@ -61,6 +75,7 @@ public class BuildMananger : MonoBehaviour
         Plot plot = ActivePlacingPlot;
         ActivePlacingPlot = null;
         plot.CancelPlacement();
+        placementUI.Hide();
         return true;
     }
 }

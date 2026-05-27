@@ -22,9 +22,10 @@ public class Plot : MonoBehaviour
     [SerializeField] private AudioSource buySound;
 
     [Header("Placement Preview")]
-    [SerializeField] private Color placementArrowColor = Color.yellow;
-    [SerializeField] private float placementArrowLength = 0.65f;
-    [SerializeField] private float placementArrowWidth = 0.06f;
+    [SerializeField, Range(0.1f, 1f)] private float placementPreviewAlpha = 0.65f;
+    [SerializeField] private Color placementRangeColor = new Color(0f, 0.85f, 1f, 0.85f);
+    [SerializeField] private float placementRangeLineWidth = 0.06f;
+    [SerializeField] private float placementRangeWidthScale = 0.5f;
 
     private GameObject towerObj;
     private PlacedTower placedTower;
@@ -32,9 +33,11 @@ public class Plot : MonoBehaviour
     private PlotState state = PlotState.Empty;
     private Tower pendingTower;
     private Vector2 chosenDirection = Vector2.up;
-    private GameObject placementArrowObject;
-    private LineRenderer placementArrow;
-    private Material placementArrowMaterial;
+    private GameObject placementPreviewObject;
+    private PlacedTower placementPreviewTower;
+    private GameObject placementRangeObject;
+    private LineRenderer placementRangeRenderer;
+    private Material placementRangeMaterial;
 
     private void Start()
     {
@@ -118,10 +121,10 @@ public class Plot : MonoBehaviour
         pendingTower = towerToBuild;
         chosenDirection = Vector2.up;
         state = PlotState.Placing;
-        ShowPlacementArrow();
+        ShowPlacementPreview();
     }
 
-    private void ConfirmPlacement()
+    public void ConfirmPlacement()
     {
         if (pendingTower == null)
             return;
@@ -165,64 +168,138 @@ public class Plot : MonoBehaviour
     {
         pendingTower = null;
         state = PlotState.Empty;
-        HidePlacementArrow();
+        HidePlacementPreview();
     }
 
     private void SetDirection(Vector2 direction)
     {
         chosenDirection = direction;
-        UpdatePlacementArrow();
+        UpdatePlacementPreview();
     }
 
-    private void ShowPlacementArrow()
+    private void ShowPlacementPreview()
     {
-        if (placementArrowObject == null)
+        HidePlacementPreview();
+
+        placementPreviewObject = Instantiate(pendingTower.prefab, transform.position, Quaternion.identity);
+        placementPreviewObject.name = $"{pendingTower.name} Preview";
+        placementPreviewTower = placementPreviewObject.GetComponent<PlacedTower>();
+
+        if (placementPreviewTower != null)
+            placementPreviewTower.SetPreviewDirection(chosenDirection);
+
+        foreach (MonoBehaviour behaviour in placementPreviewObject.GetComponentsInChildren<MonoBehaviour>(true))
+            behaviour.enabled = false;
+
+        foreach (Collider2D collider in placementPreviewObject.GetComponentsInChildren<Collider2D>(true))
+            collider.enabled = false;
+
+        foreach (AudioSource audioSource in placementPreviewObject.GetComponentsInChildren<AudioSource>(true))
+            audioSource.enabled = false;
+
+        foreach (Canvas canvas in placementPreviewObject.GetComponentsInChildren<Canvas>(true))
+            canvas.gameObject.SetActive(false);
+
+        foreach (SpriteRenderer sprite in placementPreviewObject.GetComponentsInChildren<SpriteRenderer>(true))
         {
-            placementArrowObject = new GameObject("PlacementDirection");
-            placementArrowObject.transform.SetParent(transform, false);
-            placementArrow = placementArrowObject.AddComponent<LineRenderer>();
-            placementArrowMaterial = new Material(Shader.Find("Sprites/Default"));
-            placementArrow.material = placementArrowMaterial;
-            placementArrow.useWorldSpace = false;
-            placementArrow.positionCount = 5;
-            placementArrow.startWidth = placementArrowWidth;
-            placementArrow.endWidth = placementArrowWidth;
-            placementArrow.startColor = placementArrowColor;
-            placementArrow.endColor = placementArrowColor;
-            placementArrow.sortingLayerID = sr.sortingLayerID;
-            placementArrow.sortingOrder = sr.sortingOrder + 20;
+            Color color = sprite.color;
+            color.a *= placementPreviewAlpha;
+            sprite.color = color;
+            sprite.sortingOrder += 20;
         }
 
-        placementArrowObject.SetActive(true);
-        UpdatePlacementArrow();
+        ShowPlacementRange();
     }
 
-    private void UpdatePlacementArrow()
+    private void UpdatePlacementPreview()
     {
-        if (placementArrow == null)
-            return;
+        if (placementPreviewTower != null)
+            placementPreviewTower.SetPreviewDirection(chosenDirection);
 
-        Vector2 tip = chosenDirection * placementArrowLength;
-        Vector2 side = new Vector2(-chosenDirection.y, chosenDirection.x) * (placementArrowLength * 0.2f);
-        Vector2 arrowBase = tip - chosenDirection * (placementArrowLength * 0.25f);
-
-        placementArrow.SetPosition(0, Vector3.zero);
-        placementArrow.SetPosition(1, tip);
-        placementArrow.SetPosition(2, arrowBase + side);
-        placementArrow.SetPosition(3, tip);
-        placementArrow.SetPosition(4, arrowBase - side);
+        UpdatePlacementRange();
     }
 
-    private void HidePlacementArrow()
+    private void HidePlacementPreview()
     {
-        if (placementArrowObject != null)
-            placementArrowObject.SetActive(false);
+        if (placementPreviewObject != null)
+            Destroy(placementPreviewObject);
+
+        placementPreviewObject = null;
+        placementPreviewTower = null;
+        HidePlacementRange();
     }
 
     private void OnDestroy()
     {
-        if (placementArrowMaterial != null)
-            Destroy(placementArrowMaterial);
+        HidePlacementPreview();
+
+        if (placementRangeMaterial != null)
+            Destroy(placementRangeMaterial);
+    }
+
+    private void ShowPlacementRange()
+    {
+        if (placementPreviewTower == null ||
+            !placementPreviewTower.TryGetTargetingBox(out float range, out float width) ||
+            range <= 0f ||
+            width <= 0f)
+        {
+            HidePlacementRange();
+            return;
+        }
+
+        if (placementRangeObject == null)
+        {
+            placementRangeObject = new GameObject("PlacementTargetingBox");
+            placementRangeRenderer = placementRangeObject.AddComponent<LineRenderer>();
+            placementRangeMaterial = new Material(Shader.Find("Sprites/Default"));
+            placementRangeRenderer.material = placementRangeMaterial;
+            placementRangeRenderer.useWorldSpace = true;
+            placementRangeRenderer.loop = true;
+            placementRangeRenderer.positionCount = 4;
+            placementRangeRenderer.startWidth = placementRangeLineWidth;
+            placementRangeRenderer.endWidth = placementRangeLineWidth;
+            placementRangeRenderer.startColor = placementRangeColor;
+            placementRangeRenderer.endColor = placementRangeColor;
+            placementRangeRenderer.sortingLayerID = sr.sortingLayerID;
+            placementRangeRenderer.sortingOrder = sr.sortingOrder + 30;
+        }
+
+        placementRangeObject.SetActive(true);
+        UpdatePlacementRange(range, width);
+    }
+
+    private void UpdatePlacementRange()
+    {
+        if (placementRangeRenderer == null ||
+            placementPreviewTower == null ||
+            !placementPreviewTower.TryGetTargetingBox(out float range, out float width))
+            return;
+
+        UpdatePlacementRange(range, width);
+    }
+
+    private void UpdatePlacementRange(float range, float width)
+    {
+        Vector2 direction = chosenDirection == Vector2.zero ? Vector2.up : chosenDirection.normalized;
+        width *= placementRangeWidthScale;
+        Vector2 side = new Vector2(-direction.y, direction.x);
+        Vector2 origin = transform.position;
+        Vector2 startLeft = origin + side * (width * 0.5f);
+        Vector2 startRight = origin - side * (width * 0.5f);
+        Vector2 endLeft = direction * range + startLeft;
+        Vector2 endRight = direction * range + startRight;
+
+        placementRangeRenderer.SetPosition(0, startLeft);
+        placementRangeRenderer.SetPosition(1, endLeft);
+        placementRangeRenderer.SetPosition(2, endRight);
+        placementRangeRenderer.SetPosition(3, startRight);
+    }
+
+    private void HidePlacementRange()
+    {
+        if (placementRangeObject != null)
+            placementRangeObject.SetActive(false);
     }
 
     public void OnTowerSold()

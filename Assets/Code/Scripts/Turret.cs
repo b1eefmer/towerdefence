@@ -19,7 +19,7 @@ public class Turret : PlacedTower
 
     [Header("Attributes")]
     [SerializeField] private float targetingRange = 5f;
-    [SerializeField] private float rotationSpeed = 200f;
+    [SerializeField] private float targetingWidth = 0.75f;
     [SerializeField] private float bps = 1f; 
     [SerializeField] private int baseUpgradeCost = 100;
 
@@ -40,54 +40,56 @@ public class Turret : PlacedTower
 
     private void Update () 
     {
-        if (target == null) 
+        FindTarget();
+
+        if (target == null)
         {
-            FindTarget();
             return;
         }
-        RotateTowardsTarget();
-        if (!CheckTargetIsInRange())
+
+        timeUntilFire += Time.deltaTime;
+        if (timeUntilFire >= 1f / bps)
         {
-            target = null;
-        }
-        else
-        {
-            timeUntilFire += Time.deltaTime;
-            if (timeUntilFire >= 1f / bps)
-            {
-                Shoot();
-                timeUntilFire = 0f;
-            }
+            Shoot();
+            timeUntilFire = 0f;
         }
     }
+
     private void Shoot ()
     {
         GameObject bulletObj = Instantiate(bulletPrefab, firingPoint.position, Quaternion.identity);
         Bullet bulletScript = bulletObj.GetComponent<Bullet>();
-        bulletScript.SetTarget(target);
+        bulletScript.Init(shootDirection, LayerMask.NameToLayer("GroundProjectile"));
 
-        shootSound.Play();
+        if (shootSound != null)
+            shootSound.Play();
+
         Debug.Log("Shoot");
     }
+
     private void FindTarget () 
     {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, targetingRange, (Vector2)transform.position, 0f, enemyMask);
+        target = null;
 
-        if (hits.Length > 0)
+        Vector2 center = (Vector2)transform.position + shootDirection * (targetingRange * 0.5f);
+        float angle = Mathf.Atan2(shootDirection.y, shootDirection.x) * Mathf.Rad2Deg;
+        Vector2 size = new Vector2(targetingRange, targetingWidth);
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(center, size, angle, Vector2.zero, 0f, enemyMask);
+
+        float closestDistance = float.MaxValue;
+        foreach (RaycastHit2D hit in hits)
         {
-            target = hits[0].transform;
-        }
-    }
-    private bool CheckTargetIsInRange ()
-    {
-        return Vector2.Distance(target.position, transform.position) <= targetingRange;
-    }
-    private void RotateTowardsTarget () 
-    {
-        float angle = Mathf.Atan2(target.position.y - transform.position.y, target.position.x - transform.position.x) * Mathf.Rad2Deg - 90f;
+            Vector2 toEnemy = hit.transform.position - transform.position;
+            float forwardDistance = Vector2.Dot(toEnemy, shootDirection);
+            if (forwardDistance < 0f || forwardDistance > targetingRange)
+                continue;
 
-        Quaternion targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
-        turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed*Time.deltaTime);
+            if (forwardDistance < closestDistance)
+            {
+                closestDistance = forwardDistance;
+                target = hit.transform;
+            }
+        }
     }
     public override void OpenUpgradeUI ()
     {
@@ -129,10 +131,21 @@ public class Turret : PlacedTower
         if (direction != Vector2.zero)
         {
             shootDirection = direction.normalized;
-
-            if (turretRotationPoint != null)
-                turretRotationPoint.up = shootDirection;
+            SetPreviewDirection(shootDirection);
         }
+    }
+
+    public override void SetPreviewDirection(Vector2 direction)
+    {
+        if (turretRotationPoint != null && direction != Vector2.zero)
+            turretRotationPoint.up = direction.normalized;
+    }
+
+    public override bool TryGetTargetingBox(out float range, out float width)
+    {
+        range = targetingRange;
+        width = targetingWidth;
+        return true;
     }
 
     public override TowerType GetTowerType()
@@ -161,6 +174,15 @@ public class Turret : PlacedTower
     {
         Handles.color = Color.green;
         Handles.DrawWireDisc(transform.position, transform.forward, targetingRange);
+
+        Handles.color = Color.cyan;
+        Vector2 direction = shootDirection == Vector2.zero ? Vector2.up : shootDirection.normalized;
+        Vector2 center = (Vector2)transform.position + direction * (targetingRange * 0.5f);
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Matrix4x4 previousMatrix = Handles.matrix;
+        Handles.matrix = Matrix4x4.TRS(center, Quaternion.Euler(0f, 0f, angle), Vector3.one);
+        Handles.DrawWireCube(Vector3.zero, new Vector3(targetingRange, targetingWidth, 0f));
+        Handles.matrix = previousMatrix;
     }
 #endif
 }

@@ -420,7 +420,7 @@ MonoBehaviour:
   upgradeUI: {fileID: 1446512007191987512}
   upgradeButton: {fileID: 2925493672336280154}
   targetingRange: 3.9
-  rotationSpeed: 200
+  targetingWidth: 1.5
   bps: 2
   baseUpgradeCost: 100
 --- !u!82 &5230027938422364965

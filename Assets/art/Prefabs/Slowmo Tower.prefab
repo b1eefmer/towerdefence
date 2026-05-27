@@ -107,7 +107,7 @@ MonoBehaviour:
   turretRotationPoint: {fileID: 0}
   enemyMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   targetingRange: 2.5
   aps: 0.25
   freezeTime: 1

@@ -24447,11 +24447,11 @@ MonoBehaviour:
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
-    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 1
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
-    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 1
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0

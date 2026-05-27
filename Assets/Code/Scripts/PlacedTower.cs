@@ -11,6 +11,17 @@ public abstract class PlacedTower : MonoBehaviour
     public abstract int GetUpgradeCost();
     public abstract void Upgrade();
 
+    public virtual void SetPreviewDirection(Vector2 direction)
+    {
+    }
+
+    public virtual bool TryGetTargetingBox(out float range, out float width)
+    {
+        range = 0f;
+        width = 0f;
+        return false;
+    }
+
     public int GetLevel()
     {
         return level;
