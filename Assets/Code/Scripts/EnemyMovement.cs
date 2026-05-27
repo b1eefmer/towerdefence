@@ -38,7 +38,7 @@ public class EnemyMovement : MonoBehaviour
                     baseHealth.TakeDamage(1);
                 }
 
-                EnemySpawner.onEnemyDestroy.Invoke();
+                EnemySpawner.onEnemyRemoved.Invoke();
                 Destroy(gameObject);
                 return;
             }

@@ -49,6 +49,17 @@ public class BaseHealth : MonoBehaviour
         }
     }
 
+    public void SetLives(int lives)
+    {
+        currentLives = Mathf.Clamp(lives, 0, maxLives);
+        UpdateHearts();
+    }
+
+    public int GetLives()
+    {
+        return currentLives;
+    }
+
     private void UpdateHearts()
     {
         for (int i = 0; i < hearts.Length; i++)

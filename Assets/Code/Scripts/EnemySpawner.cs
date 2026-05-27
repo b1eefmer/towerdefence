@@ -35,7 +35,7 @@ public class EnemySpawner : MonoBehaviour
     };
 
     [Header("Events")]
-    public static UnityEvent onEnemyDestroy = new UnityEvent();
+    public static UnityEvent onEnemyRemoved = new UnityEvent();
 
     private int currentWave = 1;
     private float timeSinceLastSpawn;
@@ -57,12 +57,12 @@ public class EnemySpawner : MonoBehaviour
 
     private void Awake()
     {
-        onEnemyDestroy.AddListener(EnemyDestroyed);
+        onEnemyRemoved.AddListener(EnemyRemoved);
     }
 
     private void OnDestroy()
     {
-        onEnemyDestroy.RemoveListener(EnemyDestroyed);
+        onEnemyRemoved.RemoveListener(EnemyRemoved);
     }
 
     private void Start()
@@ -120,7 +120,7 @@ public class EnemySpawner : MonoBehaviour
         spawnIndex++;
     }
 
-    private void EnemyDestroyed()
+    private void EnemyRemoved()
     {
         enemiesAlive--;
     }

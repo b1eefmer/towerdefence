@@ -44,7 +44,7 @@ public class Health : MonoBehaviour
         if (hitPoint <= 0)
         {
         
-            EnemySpawner.onEnemyDestroy.Invoke();
+            EnemySpawner.onEnemyRemoved.Invoke();
             LevelMananger.main.IncreaseCurrency(currencyWorth);
             ShowFloatingText(currencyWorth);
 

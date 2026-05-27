@@ -1,8 +1,11 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Turret : MonoBehaviour
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+public class Turret : PlacedTower
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [Header("References")]
@@ -26,7 +29,6 @@ public class Turret : MonoBehaviour
     private Transform target;
     private float timeUntilFire;
 
-    private int level = 1;
     void Start()
     {
         bpsBase = bps;
@@ -86,7 +88,7 @@ public class Turret : MonoBehaviour
         Quaternion targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
         turretRotationPoint.rotation = Quaternion.RotateTowards(turretRotationPoint.rotation, targetRotation, rotationSpeed*Time.deltaTime);
     }
-    public void OpenUpgradeUI ()
+    public override void OpenUpgradeUI ()
     {
         if (PauseMenuController.IsPaused) return;
 
@@ -97,13 +99,15 @@ public class Turret : MonoBehaviour
         upgradeUI.SetActive(false);
         UIManager.main.SetHoveringState(false);
     }
-    public void Upgrade ()
+    public override void Upgrade ()
     {
         if (PauseMenuController.IsPaused) return;
 
         if (CalculateCost() > LevelMananger.main.currency) return;
 
-        LevelMananger.main.SpendCurrency(CalculateCost());
+        int upgradeCost = CalculateCost();
+        LevelMananger.main.SpendCurrency(upgradeCost);
+        totalSpent += upgradeCost;
 
         level++;
 
@@ -114,6 +118,22 @@ public class Turret : MonoBehaviour
         Debug.Log("New BPS: " + bps);
         //Debug.Log("New Range: " + targetingRange);
         Debug.Log("New Cost: " + CalculateCost());
+    }
+
+    public override void Initialize(Vector2 direction, Plot owner, int buildCost)
+    {
+        ownerPlot = owner;
+        totalSpent = buildCost;
+    }
+
+    public override TowerType GetTowerType()
+    {
+        return TowerType.Normal;
+    }
+
+    public override int GetUpgradeCost()
+    {
+        return CalculateCost();
     }
     private int CalculateCost ()
     {
@@ -127,9 +147,11 @@ public class Turret : MonoBehaviour
     {
         return targetingRangeBase * Mathf.Pow(level, 0.4f);
     }
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected ()
     {
         Handles.color = Color.green;
         Handles.DrawWireDisc(transform.position, transform.forward, targetingRange);
     }
+#endif
 }

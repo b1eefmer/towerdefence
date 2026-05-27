@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class Plot : MonoBehaviour
 {
+    [Header("Identity")]
+    [SerializeField] private int plotId;
+    public int PlotId => plotId;
+
     [Header("References")]
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Color hoverColor;
@@ -10,7 +14,7 @@ public class Plot : MonoBehaviour
     [SerializeField] private AudioSource buySound;
 
     private GameObject towerObj;
-    private Turret turret;
+    private PlacedTower placedTower;
     private Color startColor;
 
     private void Start()
@@ -39,8 +43,8 @@ public class Plot : MonoBehaviour
         
         if (towerObj != null)
         {
-            if (turret != null)
-                turret.OpenUpgradeUI();
+            if (placedTower != null)
+                placedTower.OpenUpgradeUI();
             return;
         }
 
@@ -55,6 +59,37 @@ public class Plot : MonoBehaviour
         if (buySound != null) buySound.Play();
 
         towerObj = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
-        turret = towerObj.GetComponent<Turret>();
+        placedTower = towerObj.GetComponent<PlacedTower>();
+        if (placedTower != null)
+            placedTower.Initialize(Vector2.zero, this, towerToBuild.cost);
+    }
+
+    public void OnTowerSold()
+    {
+        towerObj = null;
+        placedTower = null;
+    }
+
+    public void RestoreTower(TowerType type, int savedLevel, int savedTotalSpent, Vector2 direction)
+    {
+        GameObject prefab = BuildMananger.main.GetPrefabByType(type);
+        if (prefab == null)
+        {
+            Debug.LogError($"No prefab configured for tower type {type}.");
+            return;
+        }
+
+        towerObj = Instantiate(prefab, transform.position, Quaternion.identity);
+        placedTower = towerObj.GetComponent<PlacedTower>();
+        if (placedTower == null)
+        {
+            Debug.LogError($"Prefab for tower type {type} does not contain PlacedTower.");
+            Destroy(towerObj);
+            towerObj = null;
+            return;
+        }
+
+        placedTower.Initialize(direction, this, savedTotalSpent);
+        placedTower.RestoreState(savedLevel, savedTotalSpent);
     }
 }

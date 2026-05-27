@@ -11,11 +11,13 @@ public class MainMenuController : MonoBehaviour
 
     private void Awake()
     {
+        GameSession.EnsureInstance();
         Time.timeScale = 1f;
     }
 
     public void StartGame()
     {
+        GameSession.NewGame();
         SceneManager.LoadScene(gameSceneName);
     }
 

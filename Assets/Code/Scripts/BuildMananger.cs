@@ -17,6 +17,17 @@ public class BuildMananger : MonoBehaviour
     {  
         return towers[selectedTower];
     }
+
+    public GameObject GetPrefabByType(TowerType type)
+    {
+        foreach (Tower tower in towers)
+        {
+            if (tower.type == type)
+                return tower.prefab;
+        }
+
+        return null;
+    }
     public void SetSelectedTower(int _selectedTower)
     {
         if (PauseMenuController.IsPaused) return;

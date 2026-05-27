@@ -11,6 +11,7 @@ public class LevelMananger : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
+        GameSession.EnsureInstance();
         main = this;
     }
     void Start()
