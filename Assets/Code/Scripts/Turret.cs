@@ -28,6 +28,7 @@ public class Turret : PlacedTower
 
     private Transform target;
     private float timeUntilFire;
+    private Vector2 shootDirection = Vector2.up;
 
     void Start()
     {
@@ -124,6 +125,14 @@ public class Turret : PlacedTower
     {
         ownerPlot = owner;
         totalSpent = buildCost;
+
+        if (direction != Vector2.zero)
+        {
+            shootDirection = direction.normalized;
+
+            if (turretRotationPoint != null)
+                turretRotationPoint.up = shootDirection;
+        }
     }
 
     public override TowerType GetTowerType()

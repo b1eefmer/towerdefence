@@ -41,6 +41,7 @@ public class WinnerUI : MonoBehaviour
             return;
         }
 
+        LevelMananger.main.CarryCurrencyToNextLevel();
         Time.timeScale = 1f;
         SceneManager.LoadScene(nextLevelSceneName);
     }

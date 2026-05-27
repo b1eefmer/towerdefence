@@ -30,20 +30,28 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Attributes")]
     [SerializeField] private float timeBetweenWaves = 5f;
-    [SerializeField] private int currencyIncome = 30;
     [SerializeField] private float epsStart = 0.5f;
     [SerializeField] private float epsEnd = 3f;
+    [SerializeField] private float collectingTime = 4f;
 
     [Header("Events")]
     public static UnityEvent onEnemyRemoved = new UnityEvent();
+
+    private enum WaveState
+    {
+        Idle,
+        Spawning,
+        CollectingDrops,
+        Done
+    }
 
     private int currentWave = 1;
     private float timeSinceLastSpawn;
     private int enemiesAlive;
     private int enemiesLeftToSpawn;
     private float eps;
-    private bool isSpawning = false;
     private int spawnIndex = 0;
+    private WaveState waveState = WaveState.Idle;
 
 
     private int totalKills = 0;
@@ -78,7 +86,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if (!isSpawning) return;
+        if (waveState != WaveState.Spawning) return;
 
         timeSinceLastSpawn += Time.deltaTime;
         if (timeSinceLastSpawn > (1f / eps) && enemiesLeftToSpawn > 0)
@@ -92,16 +100,20 @@ public class EnemySpawner : MonoBehaviour
 
         if (enemiesAlive == 0 && enemiesLeftToSpawn == 0)
         {
-            EndWave();
+            waveState = WaveState.CollectingDrops;
+            StartCoroutine(CollectDropsThenEndWave());
         }
     }
 
     private void StartWave()
     {
+        if (waveState != WaveState.Idle)
+            return;
+
         startButton.interactable = false;
         startButton.gameObject.SetActive(false);
         timeSinceLastSpawn = 0f;
-        isSpawning = true;
+        waveState = WaveState.Spawning;
 
         if (currentWave - 1 < waves.Length)
         {
@@ -142,22 +154,34 @@ public class EnemySpawner : MonoBehaviour
         enemiesAlive--;
     }
 
-    public static void AddStats(int goldEarned)
+    public static void RegisterKill()
     {
-        EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
         if (spawner != null)
-        {
             spawner.totalKills++;
-            spawner.totalGoldEarned += goldEarned;
-        }
+    }
+
+    public static void RegisterCollectedGold(int amount)
+    {
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
+        if (spawner != null)
+            spawner.totalGoldEarned += amount;
+    }
+
+    private IEnumerator CollectDropsThenEndWave()
+    {
+        yield return new WaitForSeconds(collectingTime);
+
+        CurrencyDrop[] remainingDrops = FindObjectsByType<CurrencyDrop>(FindObjectsSortMode.None);
+        foreach (CurrencyDrop drop in remainingDrops)
+            Destroy(drop.gameObject);
+
+        waveState = WaveState.Done;
+        EndWave();
     }
 
     private void EndWave()
     {
-        isSpawning = false;
-        LevelMananger.main.IncreaseCurrency(currencyIncome);
-        totalGoldEarned += currencyIncome;
-
         if (currentWave >= waves.Length)
         {
             Winner();
@@ -165,6 +189,7 @@ public class EnemySpawner : MonoBehaviour
         }
 
         currentWave++;
+        waveState = WaveState.Idle;
         UpdateWaveUI();
         StartCoroutine(ShowStartButtonWithDelay());
     }

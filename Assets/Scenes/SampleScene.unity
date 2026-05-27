@@ -24262,7 +24262,7 @@ MonoBehaviour:
   - name: Slowmo Turret
     cost: 200
     prefab: {fileID: 1617649876081789196, guid: a8700bf9c1db8f7449f57e1154daea4d, type: 3}
-    type: 0
+    type: 1
 --- !u!114 &1335786083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24342,7 +24342,9 @@ MonoBehaviour:
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}
   timeBetweenWaves: 5
-  currencyIncome: 30
+  epsStart: 0.5
+  epsEnd: 3
+  collectingTime: 4
 --- !u!114 &1335786084
 MonoBehaviour:
   m_ObjectHideFlags: 0

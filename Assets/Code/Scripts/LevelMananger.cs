@@ -21,13 +21,24 @@ public class LevelMananger : MonoBehaviour
         GameSession.EnsureInstance();
         main = this;
     }
-    void Start()
+    private void Start()
     {
-        currency = 1000;
+        currency = GameSession.Instance.hasCarriedCurrency
+            ? GameSession.Instance.carriedCurrency
+            : 1000;
+
+        GameSession.Instance.levelEntrySnapshot = currency;
     }
+
     public void IncreaseCurrency(int amount)
     {
         currency += amount;
+    }
+
+    public void CarryCurrencyToNextLevel()
+    {
+        GameSession.Instance.carriedCurrency = currency;
+        GameSession.Instance.hasCarriedCurrency = true;
     }
 
     public bool SpendCurrency(int amount)

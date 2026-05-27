@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Collections;
-using TMPro;
 
 public class Health : MonoBehaviour
 {
     [Header("Attributes")]
     [SerializeField] private int hitPoint = 2;
-    [SerializeField] private int currencyWorth = 50;
+    [SerializeField] private bool dropsCurrency;
+    [SerializeField] private int currencyDropValue = 10;
+    [SerializeField] private CurrencyDrop currencyDropPrefab;
     private bool isDestroyed = false;
 
     [Header("Effects")]
@@ -14,7 +15,6 @@ public class Health : MonoBehaviour
     [SerializeField] private Color hitColor = Color.white;
     [SerializeField] private float hitFlashDuration = 0.1f;
     [SerializeField] private GameObject hitSparkPrefab;
-    [SerializeField] private GameObject floatingTextPrefab;
 
     [Header("Audio")]
     [SerializeField] private AudioSource hitSound;
@@ -43,18 +43,22 @@ public class Health : MonoBehaviour
 
         if (hitPoint <= 0)
         {
-        
+            isDestroyed = true;
             EnemySpawner.onEnemyRemoved.Invoke();
-            LevelMananger.main.IncreaseCurrency(currencyWorth);
-            ShowFloatingText(currencyWorth);
+            EnemySpawner.RegisterKill();
 
-            
-            EnemySpawner.AddStats(currencyWorth);
+            if (dropsCurrency && currencyDropPrefab != null)
+            {
+                CurrencyDrop drop = Instantiate(
+                    currencyDropPrefab,
+                    transform.position,
+                    Quaternion.identity);
+                drop.SetValue(currencyDropValue);
+            }
 
             if (deathSound != null)
                 deathSound.Play();
 
-            isDestroyed = true;
             Destroy(gameObject);
         }
     }
@@ -72,12 +76,4 @@ public class Health : MonoBehaviour
         Destroy(spark, 0.5f);
     }
 
-    private void ShowFloatingText(int amount)
-    {
-        if (floatingTextPrefab == null) return;
-        GameObject textObj = Instantiate(floatingTextPrefab, transform.position + Vector3.up * 1f, Quaternion.identity);
-        var tmp = textObj.GetComponent<TextMeshProUGUI>();
-        if (tmp != null) tmp.text = $"+{amount}";
-        Destroy(textObj, 1f);
-    }
 }

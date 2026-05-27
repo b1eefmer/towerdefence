@@ -2,17 +2,20 @@ using UnityEngine;
 
 public class BuildMananger : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public static BuildMananger main;
+
     [Header("References")]
-    //[SerializeField] private GameObject[] towerPrefabs;
     [SerializeField] private Tower[] towers;
 
     private int selectedTower = 0;
+
+    public Plot ActivePlacingPlot { get; private set; }
+
     private void Awake()
     {
         main = this;
     }
+
     public Tower GetSelectedTower () 
     {  
         return towers[selectedTower];
@@ -32,16 +35,32 @@ public class BuildMananger : MonoBehaviour
     {
         if (PauseMenuController.IsPaused) return;
 
+        CancelActivePlacement();
         selectedTower = _selectedTower;
     }
-    void Start()
+
+    public void BeginPlacement(Plot plot)
     {
-        
+        if (ActivePlacingPlot != null && ActivePlacingPlot != plot)
+            ActivePlacingPlot.CancelPlacement();
+
+        ActivePlacingPlot = plot;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void CompletePlacement(Plot plot)
     {
-        
+        if (ActivePlacingPlot == plot)
+            ActivePlacingPlot = null;
+    }
+
+    public bool CancelActivePlacement()
+    {
+        if (ActivePlacingPlot == null)
+            return false;
+
+        Plot plot = ActivePlacingPlot;
+        ActivePlacingPlot = null;
+        plot.CancelPlacement();
+        return true;
     }
 }

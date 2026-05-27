@@ -20,6 +20,9 @@ public class PauseMenuController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (!isPaused && BuildMananger.main != null && BuildMananger.main.CancelActivePlacement())
+                return;
+
             if (isPaused) ResumeGame();
             else PauseGame();
         }
