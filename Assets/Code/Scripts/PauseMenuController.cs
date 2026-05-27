@@ -9,10 +9,23 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private string mainMenuSceneName = "MainMenu";
 
     private bool isPaused;
+    private VolumeSettingsPanel volumePanel;
+    private FriendlyMenuView menuView;
 
     private void Awake()
     {
         Time.timeScale = 1f;
+        volumePanel = GetComponent<VolumeSettingsPanel>();
+        if (volumePanel == null)
+            volumePanel = gameObject.AddComponent<VolumeSettingsPanel>();
+
+        volumePanel.Initialize(false);
+
+        menuView = GetComponent<FriendlyMenuView>();
+        if (menuView == null)
+            menuView = gameObject.AddComponent<FriendlyMenuView>();
+
+        menuView.BuildPauseMenu(this, volumePanel);
         SetPaused(false);
     }
 
@@ -44,6 +57,12 @@ public class PauseMenuController : MonoBehaviour
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
+    public void RestartLevel()
+    {
+        SetPaused(false);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private void OnDisable()
     {
         IsPaused = false;
@@ -57,6 +76,12 @@ public class PauseMenuController : MonoBehaviour
 
         if (pausePanel != null)
             pausePanel.SetActive(paused);
+
+        if (volumePanel != null)
+            volumePanel.SetVisible(paused);
+
+        if (menuView != null)
+            menuView.SetVisible(paused);
 
         Time.timeScale = paused ? 0f : 1f;
     }

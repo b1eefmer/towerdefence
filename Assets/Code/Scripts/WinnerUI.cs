@@ -19,9 +19,9 @@ public class WinnerUI : MonoBehaviour
 
     public void ShowWinner(int kills, int gold, float gameTime)
     {
-        if (killsText != null) killsText.text = $"Zabici: {kills}";
-        if (goldText != null) goldText.text = $"Zloto: {gold}";
-        if (timeText != null) timeText.text = $"Czas: {gameTime:F1} s";
+        if (killsText != null) killsText.text = $"Kills: {kills}";
+        if (goldText != null) goldText.text = $"Gold: {gold}";
+        if (timeText != null) timeText.text = $"Time: {gameTime:F1} s";
 
         panel.SetActive(true);
         Time.timeScale = 0f;
@@ -43,6 +43,17 @@ public class WinnerUI : MonoBehaviour
 
         LevelMananger.main.CarryCurrencyToNextLevel();
         Time.timeScale = 1f;
+
+        if (SceneManager.GetActiveScene().name == "SampleScene" && nextLevelSceneName == "Level2")
+        {
+            if (panel != null)
+                panel.SetActive(false);
+
+            Time.timeScale = 0f;
+            InfoSlideController.Show(nextLevelSceneName);
+            return;
+        }
+
         SceneManager.LoadScene(nextLevelSceneName);
     }
 

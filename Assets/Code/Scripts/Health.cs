@@ -45,7 +45,7 @@ public class Health : MonoBehaviour
         if (hitSparkPrefab != null)
             ShowHitEffect();
         if (hitSound != null)
-            hitSound.Play();
+            VolumeSettings.PlaySfx(hitSound);
 
         if (hitPoint <= 0)
         {
@@ -63,7 +63,7 @@ public class Health : MonoBehaviour
             }
 
             if (deathSound != null)
-                deathSound.Play();
+                VolumeSettings.PlaySfx(deathSound);
 
             Destroy(gameObject);
         }

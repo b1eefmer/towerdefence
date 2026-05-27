@@ -12,12 +12,14 @@ public class MusicManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             audioSource = GetComponent<AudioSource>();
-            if (audioSource == null)
-                audioSource = gameObject.AddComponent<AudioSource>();
-        }
-        else
-        {
-            Destroy(gameObject);
+                if (audioSource == null)
+                    audioSource = gameObject.AddComponent<AudioSource>();
+
+                VolumeSettings.Apply(audioSource, AudioChannel.Music);
+            }
+            else
+            {
+                Destroy(gameObject);
         }
     }
 
@@ -30,7 +32,7 @@ public class MusicManager : MonoBehaviour
     public void PlayMusic()
     {
         if (audioSource != null && !audioSource.isPlaying)
-            audioSource.Play();
+            VolumeSettings.PlayMusic(audioSource);
     }
 
     public void RestartMusic()
@@ -38,7 +40,7 @@ public class MusicManager : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.Stop();
-            audioSource.Play();
+            VolumeSettings.PlayMusic(audioSource);
         }
     }
 }

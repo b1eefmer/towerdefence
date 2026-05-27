@@ -8,11 +8,24 @@ using UnityEditor;
 public class MainMenuController : MonoBehaviour
 {
     [SerializeField] private string gameSceneName = "SampleScene";
+    private VolumeSettingsPanel volumePanel;
 
     private void Awake()
     {
         GameSession.EnsureInstance();
         Time.timeScale = 1f;
+
+        volumePanel = GetComponent<VolumeSettingsPanel>();
+        if (volumePanel == null)
+            volumePanel = gameObject.AddComponent<VolumeSettingsPanel>();
+
+        volumePanel.Initialize(true);
+
+        FriendlyMenuView menuView = GetComponent<FriendlyMenuView>();
+        if (menuView == null)
+            menuView = gameObject.AddComponent<FriendlyMenuView>();
+
+        menuView.BuildMainMenu(this, volumePanel);
     }
 
     public void StartGame()

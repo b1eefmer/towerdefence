@@ -146,7 +146,7 @@ public class Plot : MonoBehaviour
     {
         LevelMananger.main.SpendCurrency(towerToBuild.cost);
         if (buySound != null)
-            buySound.Play();
+            VolumeSettings.PlaySfx(buySound);
 
         towerObj = Instantiate(towerToBuild.prefab, transform.position, Quaternion.identity);
         placedTower = towerObj.GetComponent<PlacedTower>();

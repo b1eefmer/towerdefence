@@ -98,7 +98,7 @@ public class AntiAirTurret : PlacedTower
         bulletScript.Init(direction, LayerMask.NameToLayer("AirProjectile"));
 
         if (shootSound != null)
-            shootSound.Play();
+            VolumeSettings.PlaySfx(shootSound);
     }
 
     public override void Initialize(Vector2 direction, Plot owner, int buildCost)

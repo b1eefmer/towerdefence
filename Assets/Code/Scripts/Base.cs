@@ -40,8 +40,8 @@ public class BaseHealth : MonoBehaviour
         UpdateHearts();
 
         if (animator != null) animator.SetTrigger("Damage");
-        if (damageSound != null) damageSound.Play();
-        if (baseHitSound != null) baseHitSound.Play();
+        if (damageSound != null) VolumeSettings.PlaySfx(damageSound);
+        if (baseHitSound != null) VolumeSettings.PlaySfx(baseHitSound);
 
         if (currentLives <= 0)
         {
@@ -89,7 +89,7 @@ public class BaseHealth : MonoBehaviour
             musicManager.StopMusic();
 
         if (gameOverSound != null)
-            gameOverSound.Play();
+            VolumeSettings.PlaySfx(gameOverSound);
 
         if (gameOverUI != null)
             gameOverUI.ShowGameOver(totalKills, totalGold, gameTime);

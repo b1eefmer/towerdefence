@@ -62,7 +62,7 @@ public class Turret : PlacedTower
         bulletScript.Init(shootDirection, LayerMask.NameToLayer("GroundProjectile"));
 
         if (shootSound != null)
-            shootSound.Play();
+            VolumeSettings.PlaySfx(shootSound);
 
         Debug.Log("Shoot");
     }
