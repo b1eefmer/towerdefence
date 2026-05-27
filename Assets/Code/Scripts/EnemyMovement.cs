@@ -8,8 +8,10 @@ public class EnemyMovement : MonoBehaviour
     [Header("Attributes")]
     [SerializeField] private float moveSpeed = 2f;
 
+    private Transform[] path;
     private Transform target;
-    private int pathIndex = 0;
+    private int waypointIndex;
+    private int assignedPath;
 
     private float baseSpeed;
 
@@ -18,9 +20,15 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         baseSpeed = moveSpeed;
-        target = LevelMananger.main.path[pathIndex];
+        path = LevelMananger.main.GetPath(assignedPath);
+        if (path == null || path.Length == 0)
+        {
+            Debug.LogError($"Enemy has no valid path at index {assignedPath}.");
+            enabled = false;
+            return;
+        }
 
-        
+        target = path[waypointIndex];
         baseHealth = FindObjectOfType<BaseHealth>();
     }
 
@@ -28,9 +36,9 @@ public class EnemyMovement : MonoBehaviour
     {
         if (Vector2.Distance(target.position, transform.position) <= 0.1f)
         {
-            pathIndex++;
+            waypointIndex++;
 
-            if (pathIndex == LevelMananger.main.path.Length)
+            if (waypointIndex == path.Length)
             {
           
                 if (baseHealth != null)
@@ -44,15 +52,22 @@ public class EnemyMovement : MonoBehaviour
             }
             else
             {
-                target = LevelMananger.main.path[pathIndex];
+                target = path[waypointIndex];
             }
         }
     }
 
     private void FixedUpdate()
     {
+        if (target == null) return;
+
         Vector2 direction = (target.position - transform.position).normalized;
         rb.linearVelocity = direction * moveSpeed;
+    }
+
+    public void SetPath(int pathIndex)
+    {
+        assignedPath = pathIndex;
     }
 
     public void UpdateSpeed(float newSpeed)

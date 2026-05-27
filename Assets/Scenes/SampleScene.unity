@@ -1297,6 +1297,37 @@ MonoBehaviour:
   m_EffectColor: {r: 0.8392157, g: 0.65882355, b: 0.2901961, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!1 &101737827
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 101737828}
+  m_Layer: 0
+  m_Name: Bottom Entry
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &101737828
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101737827}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.55013, y: -14.08359, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1324670636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &105179784 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3674324470436342641, guid: 920e1a4cbef7a7e4e8116d171232eb9b, type: 3}
@@ -23794,6 +23825,38 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4584314646605083519, guid: 920e1a4cbef7a7e4e8116d171232eb9b, type: 3}
   m_PrefabInstance: {fileID: 1319542384}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1324670635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1324670636}
+  m_Layer: 0
+  m_Name: Bottom Entry Path
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1324670636
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324670635}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 101737828}
+  m_Father: {fileID: 1335786079}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1332511007 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3674324470436342641, guid: 920e1a4cbef7a7e4e8116d171232eb9b, type: 3}
@@ -24133,20 +24196,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   startPoint: {fileID: 1199284986}
-  path:
-  - {fileID: 1199284986}
-  - {fileID: 833977979}
-  - {fileID: 1691724322}
-  - {fileID: 1541112269}
-  - {fileID: 7264984}
-  - {fileID: 291020221}
-  - {fileID: 1928964360}
-  - {fileID: 1183034788}
-  - {fileID: 582382115}
-  - {fileID: 1929517085}
-  - {fileID: 1272967735}
-  - {fileID: 1598517966}
-  - {fileID: 783284576}
+  paths:
+  - waypoints:
+    - {fileID: 1199284986}
+    - {fileID: 833977979}
+    - {fileID: 1691724322}
+    - {fileID: 1541112269}
+    - {fileID: 7264984}
+    - {fileID: 291020221}
+    - {fileID: 1928964360}
+    - {fileID: 1183034788}
+    - {fileID: 582382115}
+    - {fileID: 1929517085}
+    - {fileID: 1272967735}
+    - {fileID: 1598517966}
+    - {fileID: 783284576}
+  - waypoints:
+    - {fileID: 101737828}
+    - {fileID: 291020221}
+    - {fileID: 1928964360}
+    - {fileID: 1183034788}
+    - {fileID: 582382115}
+    - {fileID: 1929517085}
+    - {fileID: 1272967735}
+    - {fileID: 1598517966}
+    - {fileID: 783284576}
   currency: 0
 --- !u!4 &1335786079
 Transform:
@@ -24160,7 +24234,8 @@ Transform:
   m_LocalPosition: {x: 0.05013, y: -0.41641, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1324670636}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1335786082
@@ -24200,15 +24275,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd16433469aaf3f43a7a75a7cd24333d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  enemyPrefabs:
-  - {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
-  - {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
-  - {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
+  waves:
+  - enemies:
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+  - enemies:
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
+      pathIndex: 0
   waveText: {fileID: 75635824}
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}
   timeBetweenWaves: 5
-  maxWaves: 2
   currencyIncome: 30
 --- !u!114 &1335786084
 MonoBehaviour:

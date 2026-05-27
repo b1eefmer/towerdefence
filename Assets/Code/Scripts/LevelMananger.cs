@@ -1,11 +1,18 @@
+using System;
 using UnityEngine;
+
+[Serializable]
+public class EnemyPath
+{
+    public Transform[] waypoints;
+}
 
 public class LevelMananger : MonoBehaviour
 {
     public static LevelMananger main;
 
     public Transform startPoint;
-    public Transform[] path;
+    [SerializeField] private EnemyPath[] paths;
 
     public int currency;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -36,6 +43,17 @@ public class LevelMananger : MonoBehaviour
             Debug.Log("You do not have enough to purchase this item");
             return false;
         }
+    }
+
+    public Transform[] GetPath(int index)
+    {
+        if (paths == null || index < 0 || index >= paths.Length)
+        {
+            Debug.LogError($"Path index {index} is not configured.");
+            return null;
+        }
+
+        return paths[index].waypoints;
     }
 
     // Update is called once per frame

@@ -1,13 +1,27 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
 using UnityEngine.UI;
 
+[Serializable]
+public class SpawnEntry
+{
+    public GameObject enemyPrefab;
+    public int pathIndex;
+}
+
+[Serializable]
+public class WaveDefinition
+{
+    public SpawnEntry[] enemies;
+}
+
 public class EnemySpawner : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject[] enemyPrefabs;
+    [SerializeField] private WaveDefinition[] waves;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI waveText;
@@ -16,23 +30,9 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Attributes")]
     [SerializeField] private float timeBetweenWaves = 5f;
-    [SerializeField] private int maxWaves = 10;
-    [SerializeField] private int currencyIncome = 30;      
-
-    
-    private int[][] wavePlan = new int[][]
-    {
-        new int[] { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }, // Wave 1
-        new int[] { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 }, // Wave 2
-        new int[] { 2,2 },                            // Wave 3
-        new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1, 2,2 }, // Wave 4
-        new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1,1, 2,2,2 }, // Wave 5
-        new int[] { 0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1, 2,2,2,2,2 }, // Wave 6
-        new int[] { 2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1 }, // Wave 7
-        new int[] { 2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1 }, // Wave 8
-        new int[] { 2,2,2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1 }, // Wave 9
-        new int[] { 2,2,2,2,2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1 } // Wave 10
-    };
+    [SerializeField] private int currencyIncome = 30;
+    [SerializeField] private float epsStart = 0.5f;
+    [SerializeField] private float epsEnd = 3f;
 
     [Header("Events")]
     public static UnityEvent onEnemyRemoved = new UnityEvent();
@@ -70,7 +70,10 @@ public class EnemySpawner : MonoBehaviour
         gameStartTime = Time.time;
         UpdateWaveUI();
         startButton.onClick.AddListener(StartWave);
-        startButton.interactable = true;
+        startButton.interactable = waves != null && waves.Length > 0;
+
+        if (!startButton.interactable)
+            Debug.LogError("No waves configured for EnemySpawner.");
     }
 
     private void Update()
@@ -80,9 +83,10 @@ public class EnemySpawner : MonoBehaviour
         timeSinceLastSpawn += Time.deltaTime;
         if (timeSinceLastSpawn > (1f / eps) && enemiesLeftToSpawn > 0)
         {
-            SpawnEnemy();
+            if (SpawnEnemy())
+                enemiesAlive++;
+
             enemiesLeftToSpawn--;
-            enemiesAlive++;
             timeSinceLastSpawn = 0f;
         }
 
@@ -99,9 +103,9 @@ public class EnemySpawner : MonoBehaviour
         timeSinceLastSpawn = 0f;
         isSpawning = true;
 
-        if (currentWave - 1 < wavePlan.Length)
+        if (currentWave - 1 < waves.Length)
         {
-            enemiesLeftToSpawn = wavePlan[currentWave - 1].Length;
+            enemiesLeftToSpawn = waves[currentWave - 1].enemies.Length;
             spawnIndex = 0;
         }
         else
@@ -111,13 +115,26 @@ public class EnemySpawner : MonoBehaviour
         eps = EnemiesPerSecond();
     }
 
-    private void SpawnEnemy()
+    private bool SpawnEnemy()
     {
-        if (currentWave - 1 >= wavePlan.Length) return;
-        int enemyIndex = wavePlan[currentWave - 1][spawnIndex];
-        GameObject prefabToSpawn = enemyPrefabs[enemyIndex];
-        Instantiate(prefabToSpawn, LevelMananger.main.startPoint.position, Quaternion.identity);
+        if (currentWave - 1 >= waves.Length) return false;
+
+        SpawnEntry entry = waves[currentWave - 1].enemies[spawnIndex];
+        Transform[] path = LevelMananger.main.GetPath(entry.pathIndex);
+        if (entry.enemyPrefab == null || path == null || path.Length == 0)
+        {
+            Debug.LogError($"Invalid spawn entry in wave {currentWave} at index {spawnIndex}.");
+            spawnIndex++;
+            return false;
+        }
+
+        GameObject enemy = Instantiate(entry.enemyPrefab, path[0].position, Quaternion.identity);
+        EnemyMovement movement = enemy.GetComponent<EnemyMovement>();
+        if (movement != null)
+            movement.SetPath(entry.pathIndex);
+
         spawnIndex++;
+        return true;
     }
 
     private void EnemyRemoved()
@@ -141,7 +158,7 @@ public class EnemySpawner : MonoBehaviour
         LevelMananger.main.IncreaseCurrency(currencyIncome);
         totalGoldEarned += currencyIncome;
 
-        if (currentWave >= maxWaves)
+        if (currentWave >= waves.Length)
         {
             Winner();
             return;
@@ -173,12 +190,13 @@ public class EnemySpawner : MonoBehaviour
 
     private void UpdateWaveUI()
     {
-        waveText.text = $"Wave {currentWave} / {maxWaves}";
+        int totalWaves = waves == null ? 0 : waves.Length;
+        waveText.text = $"Wave {currentWave} / {totalWaves}";
     }
 
     private float EnemiesPerSecond()
     {
-        
-        return 1.0f;
+        float progress = Mathf.InverseLerp(1f, waves.Length, currentWave);
+        return Mathf.Lerp(epsStart, epsEnd, progress);
     }
 }
