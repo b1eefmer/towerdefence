@@ -16,7 +16,7 @@ public class EnemySpawner : MonoBehaviour
 
     [Header("Attributes")]
     [SerializeField] private float timeBetweenWaves = 5f;
-    [SerializeField] private int maxWaves = 10;
+    [SerializeField] private int maxWaves = 5;
     [SerializeField] private int currencyIncome = 30;
 
     [Header("Spawn Rate")]
@@ -28,18 +28,23 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float enemiesPerSecondCap = 15f;
 
     
+    // Enemy indices: 0 = Basic, 1 = Speed, 2 = Tank, 3 = Fly (AirTurret only)
     private int[][] wavePlan = new int[][]
     {
-        new int[] { 0,2,2,2,0,0,0,0,0,0,0,0,0,0,0 }, // Wave 1
-        new int[] { 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1 }, // Wave 2
-        new int[] { 2,2 },                            // Wave 3
-        new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1, 2,2 }, // Wave 4
-        new int[] { 0,0,0,0,0,0,0,0, 1,1,1,1,1, 2,2,2 }, // Wave 5
-        new int[] { 0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1, 2,2,2,2,2 }, // Wave 6
-        new int[] { 2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1 }, // Wave 7
-        new int[] { 2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1 }, // Wave 8
-        new int[] { 2,2,2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1 }, // Wave 9
-        new int[] { 2,2,2,2,2,2,2,2,2,2,2,2, 0,0,0,0,0,0,0,0,0, 1,1,1,1,1,1,1,1 } // Wave 10
+        // Wave 1 - Знакомство: только базовые враги, чтобы освоить постройку и направление турелей.
+        new int[] { 0, 0, 0, 0, 0, 0, 0, 0 },
+
+        // Wave 2 - Скорость: появляются быстрые враги вперемешку с базовыми.
+        new int[] { 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0 },
+
+        // Wave 3 - Воздушная угроза: первые FlyEnemy. Без AirTurret пройти невозможно.
+        new int[] { 0, 0, 3, 0, 1, 3, 0, 3, 3, 0, 1, 3, 0, 0, 1, 3 },
+
+        // Wave 4 - Танки наступают: тяжёлые цели + продолжающееся давление с воздуха.
+        new int[] { 0, 2, 0, 1, 1, 2, 0, 0, 2, 0, 3, 3, 0, 2, 0, 1, 1, 2 },
+
+        // Wave 5 - Финальный шторм: все типы врагов, плотные группы танков и летающих.
+        new int[] { 2, 2, 0, 0, 1, 3, 2, 0, 1, 3, 2, 0, 0, 1, 1, 3, 3, 2, 2, 0, 0, 1, 3, 2, 0, 1, 3, 2, 2, 3 }
     };
 
     [Header("Events")]
@@ -123,6 +128,14 @@ public class EnemySpawner : MonoBehaviour
     {
         if (currentWave - 1 >= wavePlan.Length) return;
         int enemyIndex = wavePlan[currentWave - 1][spawnIndex];
+
+        if (enemyPrefabs == null || enemyIndex < 0 || enemyIndex >= enemyPrefabs.Length || enemyPrefabs[enemyIndex] == null)
+        {
+            Debug.LogWarning($"EnemySpawner: wave {currentWave} requests enemy index {enemyIndex}, but enemyPrefabs has only {(enemyPrefabs == null ? 0 : enemyPrefabs.Length)} slots. Skipping spawn.");
+            spawnIndex++;
+            return;
+        }
+
         GameObject prefabToSpawn = enemyPrefabs[enemyIndex];
         Instantiate(prefabToSpawn, LevelMananger.main.startPoint.position, Quaternion.identity);
         spawnIndex++;

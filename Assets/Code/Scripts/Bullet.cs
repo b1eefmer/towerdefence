@@ -14,6 +14,9 @@ public class Bullet : MonoBehaviour
     private Transform target;
     private bool hasHit = false;
 
+    private bool damageGround = true;
+    private bool damageAir = true;
+
     private void Start()
     {
         Destroy(gameObject, lifetime);
@@ -33,6 +36,15 @@ public class Bullet : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
     }
 
+    /// <summary>
+    /// Configures which enemy kinds this bullet can damage. Called by the turret right after Launch().
+    /// </summary>
+    public void SetDamageFilter(bool ground, bool air)
+    {
+        damageGround = ground;
+        damageAir = air;
+    }
+
     private void FixedUpdate()
     {
         if (target == null) return;
@@ -43,11 +55,17 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (hasHit) return;
-
         if (!other.gameObject.TryGetComponent<Health>(out var health)) return;
+
+        if (!CanDamage(health.Kind)) return;
 
         hasHit = true;
         health.TakeDamage(bulletDamage);
         Destroy(gameObject);
+    }
+
+    private bool CanDamage(EnemyKind kind)
+    {
+        return kind == EnemyKind.Ground ? damageGround : damageAir;
     }
 }

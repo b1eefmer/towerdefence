@@ -32,6 +32,12 @@ public class Turret : MonoBehaviour
     [Tooltip("Half-angle of the firing cone in degrees. 45 means a 90 degrees total forward arc.")]
     [SerializeField] private float coneHalfAngle = 45f;
 
+    [Header("Targeting Filter")]
+    [Tooltip("Can this turret target Ground enemies?")]
+    [SerializeField] private bool canTargetGround = true;
+    [Tooltip("Can this turret target Air enemies (e.g. FlyEnemy)?")]
+    [SerializeField] private bool canTargetAir = false;
+
     [Header("Placement")]
     [SerializeField] private Color awaitingTint = new Color(1f, 1f, 0.6f, 1f);
     [Tooltip("Default facing direction when the turret spawns, before the player picks one.")]
@@ -239,6 +245,8 @@ public class Turret : MonoBehaviour
             Vector2 dirToEnemy = toEnemy / Mathf.Sqrt(sqr);
             if (Vector2.Dot(dirToEnemy, facingDirection) < cosThreshold) continue;
 
+            if (!CanTargetEnemy(hits[i].transform)) continue;
+
             if (sqr < closestSqr)
             {
                 closestSqr = sqr;
@@ -249,9 +257,16 @@ public class Turret : MonoBehaviour
         target = closest;
     }
 
+    private bool CanTargetEnemy(Transform enemyTransform)
+    {
+        if (!enemyTransform.TryGetComponent<Health>(out var health)) return false;
+        return health.Kind == EnemyKind.Ground ? canTargetGround : canTargetAir;
+    }
+
     private bool IsTargetStillValid()
     {
         if (target == null) return false;
+        if (!CanTargetEnemy(target)) return false;
 
         Vector2 toEnemy = (Vector2)target.position - (Vector2)transform.position;
         float sqr = toEnemy.sqrMagnitude;
@@ -269,7 +284,10 @@ public class Turret : MonoBehaviour
 
         GameObject bulletObj = Instantiate(bulletPrefab, firingPoint.position, Quaternion.identity);
         if (bulletObj.TryGetComponent<Bullet>(out var bulletScript))
+        {
             bulletScript.Launch(facingDirection);
+            bulletScript.SetDamageFilter(canTargetGround, canTargetAir);
+        }
 
         if (shootSound != null) shootSound.Play();
     }

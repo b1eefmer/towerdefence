@@ -2,12 +2,21 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 
+public enum EnemyKind
+{
+    Ground = 0,
+    Air = 1
+}
+
 public class Health : MonoBehaviour
 {
     [Header("Attributes")]
     [SerializeField] private int hitPoint = 2;
     [SerializeField] private int currencyWorth = 50;
+    [SerializeField] private EnemyKind kind = EnemyKind.Ground;
     private bool isDestroyed = false;
+
+    public EnemyKind Kind => kind;
 
     [Header("Effects")]
     [SerializeField] private SpriteRenderer spriteRenderer;

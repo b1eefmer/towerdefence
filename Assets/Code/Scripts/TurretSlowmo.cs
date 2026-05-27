@@ -12,7 +12,11 @@ public class TurretSlowmo : MonoBehaviour
     [Header("Attributes")]
     [SerializeField] private float targetingRange = 5f;
     [SerializeField] private float aps = 4f; // attacks per second
-    [SerializeField] private float freezeTime = 1f; 
+    [SerializeField] private float freezeTime = 1f;
+
+    [Header("Targeting Filter")]
+    [SerializeField] private bool canTargetGround = true;
+    [SerializeField] private bool canTargetAir = false;
 
 
     private float timeUntilFire;
@@ -39,10 +43,17 @@ public class TurretSlowmo : MonoBehaviour
             for (int i = 0; i < hits.Length; i++)
             {
                 RaycastHit2D hit = hits[i];
-                
-                EnemyMovement em = hit.transform.GetComponent<EnemyMovement>();
-                em.UpdateSpeed(0.5f);
 
+                if (hit.transform.TryGetComponent<Health>(out var health))
+                {
+                    bool allowed = health.Kind == EnemyKind.Ground ? canTargetGround : canTargetAir;
+                    if (!allowed) continue;
+                }
+
+                EnemyMovement em = hit.transform.GetComponent<EnemyMovement>();
+                if (em == null) continue;
+
+                em.UpdateSpeed(0.5f);
                 StartCoroutine(ResetEnemySpeed(em));
             }
         }
