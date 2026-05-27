@@ -16,6 +16,7 @@ public class SpawnEntry
 public class WaveDefinition
 {
     public SpawnEntry[] enemies;
+    public int repeatCount = 1;
 }
 
 public class EnemySpawner : MonoBehaviour
@@ -121,7 +122,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (currentWave - 1 < waves.Length)
         {
-            enemiesLeftToSpawn = waves[currentWave - 1].enemies.Length;
+            enemiesLeftToSpawn = GetSpawnCount(waves[currentWave - 1]);
             spawnIndex = 0;
         }
         else
@@ -135,7 +136,14 @@ public class EnemySpawner : MonoBehaviour
     {
         if (currentWave - 1 >= waves.Length) return false;
 
-        SpawnEntry entry = waves[currentWave - 1].enemies[spawnIndex];
+        SpawnEntry[] entries = waves[currentWave - 1].enemies;
+        if (entries == null || entries.Length == 0)
+        {
+            Debug.LogError($"Wave {currentWave} has no enemies configured.");
+            return false;
+        }
+
+        SpawnEntry entry = entries[spawnIndex % entries.Length];
         Transform[] path = LevelMananger.main.GetPath(entry.pathIndex);
         if (entry.enemyPrefab == null || path == null || path.Length == 0)
         {
@@ -151,6 +159,14 @@ public class EnemySpawner : MonoBehaviour
 
         spawnIndex++;
         return true;
+    }
+
+    private int GetSpawnCount(WaveDefinition wave)
+    {
+        if (wave == null || wave.enemies == null)
+            return 0;
+
+        return wave.enemies.Length * Mathf.Max(1, wave.repeatCount);
     }
 
     private void EnemyRemoved()

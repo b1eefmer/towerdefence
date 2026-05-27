@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -14,13 +15,17 @@ public class LevelMananger : MonoBehaviour
 
     public Transform startPoint;
     [SerializeField] private EnemyPath[] paths;
+    [SerializeField] private int startingCurrency = 10000;
+    [SerializeField] private int minimumStartingCurrency;
 
     public int currency;
+    private readonly List<Transform[]> runtimePaths = new List<Transform[]>();
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         GameSession.EnsureInstance();
         main = this;
+        BuildRuntimePaths();
     }
     private void Start()
     {
@@ -30,10 +35,11 @@ public class LevelMananger : MonoBehaviour
 
     private void InitializeCurrency()
     {
-        currency = GameSession.Instance.hasCarriedCurrency
+        int baseCurrency = GameSession.Instance.hasCarriedCurrency
             ? GameSession.Instance.carriedCurrency
-            : 1000;
+            : startingCurrency;
 
+        currency = Mathf.Max(baseCurrency, minimumStartingCurrency);
         GameSession.Instance.levelEntrySnapshot = currency;
     }
 
@@ -71,18 +77,66 @@ public class LevelMananger : MonoBehaviour
 
     public Transform[] GetPath(int index)
     {
-        if (paths == null || index < 0 || index >= paths.Length)
+        if (runtimePaths.Count == 0)
+            BuildRuntimePaths();
+
+        if (index < 0 || index >= runtimePaths.Count)
         {
             Debug.LogError($"Path index {index} is not configured.");
             return null;
         }
 
-        return paths[index].waypoints;
+        return runtimePaths[index];
     }
 
-    // Update is called once per frame
-    void Update()
+    private void BuildRuntimePaths()
     {
-        
+        runtimePaths.Clear();
+
+        AddNamedPath("Path1");
+        AddNamedPath("Path2");
+        AddNamedPath("FlyPath1");
+        AddNamedPath("FlyPath2");
+
+        if (runtimePaths.Count > 0)
+            return;
+
+        if (paths == null)
+            return;
+
+        foreach (EnemyPath path in paths)
+        {
+            if (path != null && IsValidPath(path.waypoints))
+                runtimePaths.Add(path.waypoints);
+        }
+    }
+
+    private void AddNamedPath(string pathObjectName)
+    {
+        GameObject pathObject = GameObject.Find(pathObjectName);
+        if (pathObject == null)
+            return;
+
+        Transform pathRoot = pathObject.transform;
+        Transform[] waypoints = new Transform[pathRoot.childCount];
+        for (int i = 0; i < pathRoot.childCount; i++)
+            waypoints[i] = pathRoot.GetChild(i);
+
+        if (IsValidPath(waypoints))
+            runtimePaths.Add(waypoints);
+    }
+
+    private bool IsValidPath(Transform[] waypoints)
+    {
+        if (waypoints == null || waypoints.Length == 0)
+            return false;
+
+        foreach (Transform waypoint in waypoints)
+        {
+            if (waypoint == null)
+                return false;
+        }
+
+        return true;
     }
 }
