@@ -154,6 +154,11 @@ public class Turret : PlacedTower
         return TowerType.Normal;
     }
 
+    public override Vector2 GetDirection()
+    {
+        return shootDirection;
+    }
+
     public override int GetUpgradeCost()
     {
         return CalculateCost();

@@ -129,6 +129,11 @@ public class AntiAirTurret : PlacedTower
         return TowerType.AntiAir;
     }
 
+    public override Vector2 GetDirection()
+    {
+        return baseDirection;
+    }
+
     public override int GetUpgradeCost()
     {
         return Mathf.RoundToInt(baseUpgradeCost * Mathf.Pow(level, 0.8f));

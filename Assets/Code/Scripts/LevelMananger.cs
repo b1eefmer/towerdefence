@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [Serializable]
@@ -23,11 +24,23 @@ public class LevelMananger : MonoBehaviour
     }
     private void Start()
     {
+        InitializeCurrency();
+        StartCoroutine(ApplyPendingLoadAfterSceneStart());
+    }
+
+    private void InitializeCurrency()
+    {
         currency = GameSession.Instance.hasCarriedCurrency
             ? GameSession.Instance.carriedCurrency
             : 1000;
 
         GameSession.Instance.levelEntrySnapshot = currency;
+    }
+
+    private IEnumerator ApplyPendingLoadAfterSceneStart()
+    {
+        yield return null;
+        SaveSystem.ApplyPendingLoadIfAny();
     }
 
     public void IncreaseCurrency(int amount)

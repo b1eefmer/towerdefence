@@ -58,6 +58,10 @@ public class EnemySpawner : MonoBehaviour
     private int totalGoldEarned = 0;
     private float gameStartTime;
 
+    public int CurrentWave => currentWave;
+    public int TotalWaves => waves == null ? 0 : waves.Length;
+    public bool CanSaveNow => waveState == WaveState.Idle && currentWave <= TotalWaves;
+
     
     public int GetTotalKills() { return totalKills; }
     public int GetTotalGold() { return totalGoldEarned; }
@@ -191,7 +195,28 @@ public class EnemySpawner : MonoBehaviour
         currentWave++;
         waveState = WaveState.Idle;
         UpdateWaveUI();
+        SaveSystem.AutoSaveAfterWave(this);
         StartCoroutine(ShowStartButtonWithDelay());
+    }
+
+    public void RestoreBetweenWaves(int nextWaveIndex)
+    {
+        StopAllCoroutines();
+        currentWave = Mathf.Clamp(nextWaveIndex, 1, Mathf.Max(1, TotalWaves));
+        waveState = WaveState.Idle;
+        enemiesAlive = 0;
+        enemiesLeftToSpawn = 0;
+        spawnIndex = 0;
+        timeSinceLastSpawn = 0f;
+        UpdateWaveUI();
+
+        if (startButton != null)
+        {
+            startButton.gameObject.SetActive(true);
+            startButton.interactable = currentWave <= TotalWaves;
+        }
+
+        enabled = true;
     }
 
     private IEnumerator ShowStartButtonWithDelay()

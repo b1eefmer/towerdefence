@@ -63,6 +63,20 @@ public class PauseMenuController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void SaveGame()
+    {
+        SaveSystem.SaveCurrentGame();
+
+        if (menuView != null)
+            menuView.RefreshSaveButtons(GetCanSave(), SaveSystem.HasSave());
+    }
+
+    public void LoadGame()
+    {
+        if (SaveSystem.LoadSavedGame())
+            SetPaused(false);
+    }
+
     private void OnDisable()
     {
         IsPaused = false;
@@ -81,8 +95,17 @@ public class PauseMenuController : MonoBehaviour
             volumePanel.SetVisible(paused);
 
         if (menuView != null)
+        {
             menuView.SetVisible(paused);
+            menuView.RefreshSaveButtons(GetCanSave(), SaveSystem.HasSave());
+        }
 
         Time.timeScale = paused ? 0f : 1f;
+    }
+
+    private bool GetCanSave()
+    {
+        EnemySpawner spawner = FindFirstObjectByType<EnemySpawner>();
+        return spawner != null && spawner.CanSaveNow;
     }
 }

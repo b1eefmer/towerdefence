@@ -7,6 +7,8 @@ public class FriendlyMenuView : MonoBehaviour
 {
     private GameObject canvasObject;
     private GameObject root;
+    private Button saveButton;
+    private Button loadButton;
 
     public void BuildMainMenu(MainMenuController controller, VolumeSettingsPanel volumePanel)
     {
@@ -17,9 +19,11 @@ public class FriendlyMenuView : MonoBehaviour
         CreateText(card.transform, "Title", "Tower Defence", new Vector2(0f, -70f), new Vector2(520f, 70f), 46f, FontStyles.Bold);
         CreateText(card.transform, "Subtitle", "Build, defend, survive", new Vector2(0f, -128f), new Vector2(520f, 36f), 24f, FontStyles.Normal);
 
-        CreateButton(card.transform, "Start Button", "Start Game", new Vector2(0f, -210f), new Color(0.20f, 0.58f, 0.28f, 1f), controller.StartGame);
-        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -280f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
-        CreateButton(card.transform, "Exit Button", "Exit Game", new Vector2(0f, -350f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ExitGame);
+        CreateButton(card.transform, "Start Button", "Start Game", new Vector2(0f, -195f), new Color(0.20f, 0.58f, 0.28f, 1f), controller.StartGame);
+        loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -265f), new Color(0.72f, 0.44f, 0.18f, 1f), controller.LoadGame);
+        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -335f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
+        CreateButton(card.transform, "Exit Button", "Exit Game", new Vector2(0f, -405f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ExitGame);
+        RefreshSaveButtons(false, SaveSystem.HasSave());
     }
 
     public void BuildPauseMenu(PauseMenuController controller, VolumeSettingsPanel volumePanel)
@@ -31,10 +35,12 @@ public class FriendlyMenuView : MonoBehaviour
         CreateText(card.transform, "Title", "Paused", new Vector2(0f, -70f), new Vector2(500f, 64f), 44f, FontStyles.Bold);
         CreateText(card.transform, "Subtitle", "Take a breath, commander", new Vector2(0f, -124f), new Vector2(500f, 34f), 22f, FontStyles.Normal);
 
-        CreateButton(card.transform, "Continue Button", "Continue", new Vector2(0f, -200f), new Color(0.20f, 0.58f, 0.28f, 1f), controller.ResumeGame);
-        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -270f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
-        CreateButton(card.transform, "Restart Button", "Restart Level", new Vector2(0f, -340f), new Color(0.72f, 0.44f, 0.18f, 1f), controller.RestartLevel);
-        CreateButton(card.transform, "Main Menu Button", "Main Menu", new Vector2(0f, -410f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ReturnToMainMenu);
+        CreateButton(card.transform, "Continue Button", "Continue", new Vector2(0f, -176f), new Color(0.20f, 0.58f, 0.28f, 1f), controller.ResumeGame);
+        saveButton = CreateButton(card.transform, "Save Button", "Save Game", new Vector2(0f, -238f), new Color(0.72f, 0.44f, 0.18f, 1f), controller.SaveGame);
+        loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -300f), new Color(0.20f, 0.36f, 0.62f, 1f), controller.LoadGame);
+        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -362f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
+        CreateButton(card.transform, "Restart Button", "Restart Level", new Vector2(0f, -424f), new Color(0.44f, 0.36f, 0.20f, 1f), controller.RestartLevel);
+        CreateButton(card.transform, "Main Menu Button", "Main Menu", new Vector2(0f, -486f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ReturnToMainMenu);
 
         SetVisible(false);
     }
@@ -43,6 +49,15 @@ public class FriendlyMenuView : MonoBehaviour
     {
         if (canvasObject != null)
             canvasObject.SetActive(visible);
+    }
+
+    public void RefreshSaveButtons(bool canSave, bool canLoad)
+    {
+        if (saveButton != null)
+            saveButton.interactable = canSave;
+
+        if (loadButton != null)
+            loadButton.interactable = canLoad;
     }
 
     private void CreateCanvas(int sortingOrder)

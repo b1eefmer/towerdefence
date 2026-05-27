@@ -309,8 +309,32 @@ public class Plot : MonoBehaviour
         state = PlotState.Empty;
     }
 
+    public bool TryCreateTowerSaveData(out TowerSaveData towerData)
+    {
+        towerData = null;
+        if (placedTower == null)
+            return false;
+
+        towerData = new TowerSaveData
+        {
+            plotId = plotId,
+            type = placedTower.GetTowerType(),
+            level = placedTower.GetLevel(),
+            totalSpent = placedTower.GetTotalSpent(),
+            direction = placedTower.GetDirection()
+        };
+        return true;
+    }
+
     public void RestoreTower(TowerType type, int savedLevel, int savedTotalSpent, Vector2 direction)
     {
+        if (towerObj != null)
+            Destroy(towerObj);
+
+        towerObj = null;
+        placedTower = null;
+        state = PlotState.Empty;
+
         GameObject prefab = BuildMananger.main.GetPrefabByType(type);
         if (prefab == null)
         {

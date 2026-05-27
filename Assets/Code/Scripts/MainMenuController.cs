@@ -42,4 +42,9 @@ public class MainMenuController : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+    public void LoadGame()
+    {
+        SaveSystem.LoadSavedGame();
+    }
 }

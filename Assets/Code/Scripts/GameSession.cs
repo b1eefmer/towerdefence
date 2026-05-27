@@ -34,5 +34,6 @@ public class GameSession : MonoBehaviour
         Instance.carriedCurrency = 0;
         Instance.levelEntrySnapshot = 0;
         Instance.savedSceneName = null;
+        SaveSystem.DeleteSave();
     }
 }

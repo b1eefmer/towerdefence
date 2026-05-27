@@ -37,6 +37,16 @@ public abstract class PlacedTower : MonoBehaviour
         return totalSpent / 2;
     }
 
+    public int GetTotalSpent()
+    {
+        return totalSpent;
+    }
+
+    public virtual Vector2 GetDirection()
+    {
+        return Vector2.zero;
+    }
+
     public bool CanUpgrade()
     {
         return LevelMananger.main != null &&
