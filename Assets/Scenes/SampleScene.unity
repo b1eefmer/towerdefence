@@ -13725,7 +13725,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sniper Turret 150
+  m_text: Anti Air 150
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -24255,10 +24255,10 @@ MonoBehaviour:
     cost: 100
     prefab: {fileID: 3656807605993658195, guid: e74553254d603014ca60d43d457ed95b, type: 3}
     type: 0
-  - name: Test Turret
+  - name: Anti Air
     cost: 150
-    prefab: {fileID: 3656807605993658195, guid: cda69a52c78924140b408e2364b84a2a, type: 3}
-    type: 0
+    prefab: {fileID: 3656807605993658195, guid: e7fdb7fbc2d2429aa5bb7b65e29cf438, type: 3}
+    type: 2
   - name: Slowmo Turret
     cost: 200
     prefab: {fileID: 1617649876081789196, guid: a8700bf9c1db8f7449f57e1154daea4d, type: 3}
@@ -30241,7 +30241,7 @@ GameObject:
   - component: {fileID: 1716470722}
   - component: {fileID: 1716470721}
   m_Layer: 5
-  m_Name: Sniper Turret
+  m_Name: Anti Air
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -93,14 +93,15 @@ public class Turret : PlacedTower
     }
     public override void OpenUpgradeUI ()
     {
-        if (PauseMenuController.IsPaused) return;
-
-        upgradeUI.SetActive(true);
+        base.OpenUpgradeUI();
     }
     public void CloseUpgradeUI()
     {
-        upgradeUI.SetActive(false);
-        UIManager.main.SetHoveringState(false);
+        if (upgradeUI != null)
+            upgradeUI.SetActive(false);
+
+        if (UIManager.main != null)
+            UIManager.main.SetHoveringState(false);
     }
     public override void Upgrade ()
     {

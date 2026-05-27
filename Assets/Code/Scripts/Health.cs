@@ -21,6 +21,7 @@ public class Health : MonoBehaviour
     [SerializeField] private AudioSource deathSound;
 
     private Color originalColor;
+    private Coroutine flashCoroutine;
 
     private void Start()
     {
@@ -35,7 +36,12 @@ public class Health : MonoBehaviour
         hitPoint -= dmg;
 
         if (spriteRenderer != null)
-            StartCoroutine(FlashCoroutine());
+        {
+            if (flashCoroutine != null)
+                StopCoroutine(flashCoroutine);
+
+            flashCoroutine = StartCoroutine(FlashCoroutine());
+        }
         if (hitSparkPrefab != null)
             ShowHitEffect();
         if (hitSound != null)
@@ -68,6 +74,7 @@ public class Health : MonoBehaviour
         spriteRenderer.color = hitColor;
         yield return new WaitForSeconds(hitFlashDuration);
         spriteRenderer.color = originalColor;
+        flashCoroutine = null;
     }
 
     private void ShowHitEffect()

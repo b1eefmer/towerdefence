@@ -4,6 +4,7 @@ public class EnemyMovement : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer spriteRenderer;
 
     [Header("Attributes")]
     [SerializeField] private float moveSpeed = 2f;
@@ -28,8 +29,8 @@ public class EnemyMovement : MonoBehaviour
             return;
         }
 
-        target = path[waypointIndex];
-        baseHealth = FindObjectOfType<BaseHealth>();
+        SetTarget(path[waypointIndex]);
+        baseHealth = FindFirstObjectByType<BaseHealth>();
     }
 
     void Update()
@@ -52,7 +53,7 @@ public class EnemyMovement : MonoBehaviour
             }
             else
             {
-                target = path[waypointIndex];
+                SetTarget(path[waypointIndex]);
             }
         }
     }
@@ -68,6 +69,21 @@ public class EnemyMovement : MonoBehaviour
     public void SetPath(int pathIndex)
     {
         assignedPath = pathIndex;
+    }
+
+    private void SetTarget(Transform nextTarget)
+    {
+        target = nextTarget;
+
+        Vector2 direction = (target.position - transform.position).normalized;
+        if (direction == Vector2.zero)
+            return;
+
+        float angle = Mathf.Atan2(direction.y, Mathf.Abs(direction.x)) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+        if (spriteRenderer != null)
+            spriteRenderer.flipX = direction.x < -0.01f;
     }
 
     public void UpdateSpeed(float newSpeed)
