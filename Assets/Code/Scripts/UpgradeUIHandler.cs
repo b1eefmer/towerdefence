@@ -43,7 +43,9 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
         GameObject panelObject = CreateUIObject("Tower Action Panel", canvasObject.transform);
         panelObject.transform.SetParent(canvasObject.transform, false);
         Image panelImage = panelObject.AddComponent<Image>();
-        panelImage.color = new Color(0.07f, 0.08f, 0.11f, 0.92f);
+        panelImage.color = new Color(0.1f, 0.11f, 0.16f, 0.90f); // Glassmorphism dark background
+
+        panelObject.AddComponent<CanvasGroup>(); // Для Fade-анімації
 
         RectTransform panelRect = panelObject.GetComponent<RectTransform>();
         panelRect.anchorMin = new Vector2(0.5f, 0f);
@@ -57,24 +59,29 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
         handler.levelText = handler.CreateText(panelObject.transform, "Level Text", new Vector2(-220f, 82f), new Vector2(210f, 32f), 24f);
         handler.upgradeText = handler.CreateText(panelObject.transform, "Upgrade Text", new Vector2(0f, 82f), new Vector2(240f, 32f), 24f);
         handler.sellText = handler.CreateText(panelObject.transform, "Sell Text", new Vector2(230f, 82f), new Vector2(210f, 32f), 24f);
+        
+        // Оновлені кольори кнопок під новий дизайн
         handler.upgradeButton = handler.CreateButton(
             panelObject.transform,
             "Upgrade Button",
             "Upgrade",
             new Vector2(-210f, 22f),
-            new Color(0.20f, 0.58f, 0.28f, 1f));
+            new Color(0f, 0.75f, 0.85f, 1f)); // Primary Cyan
+            
         handler.sellButton = handler.CreateButton(
             panelObject.transform,
             "Sell Button",
             "Sell",
             new Vector2(0f, 22f),
-            new Color(0.72f, 0.44f, 0.18f, 1f));
+            new Color(0.15f, 0.25f, 0.45f, 1f)); // Secondary Blue
+            
         handler.closeButton = handler.CreateButton(
             panelObject.transform,
             "Close Button",
             "Close",
             new Vector2(210f, 22f),
-            new Color(0.60f, 0.22f, 0.22f, 1f));
+            new Color(0.60f, 0.22f, 0.22f, 1f)); // Destructive Red
+            
         handler.closeButtonText = handler.closeButton.GetComponentInChildren<TMP_Text>();
 
         handler.upgradeButton.onClick.AddListener(handler.Upgrade);
@@ -84,6 +91,18 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
         instance = handler;
         return handler;
+    }
+
+    private void OnEnable()
+    {
+        if (panel != null)
+        {
+            CanvasGroup group = panel.GetComponent<CanvasGroup>();
+            if (group != null) StartCoroutine(UIAnimator.FadeIn(group, 0.2f));
+
+            RectTransform rect = panel.GetComponent<RectTransform>();
+            if (rect != null) StartCoroutine(UIAnimator.ScaleIn(rect, 0.35f));
+        }
     }
 
     public void Bind(PlacedTower placedTower)
@@ -110,6 +129,7 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
         mouse_over = true;
         UIManager.main.SetHoveringState(true);
     }
+    
     public void OnPointerExit(PointerEventData eventData)
     {
         ClearHoverState();
@@ -149,7 +169,10 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
         text.alignment = TextAlignmentOptions.Center;
         text.color = Color.white;
         text.fontSize = fontSize;
+        text.fontStyle = FontStyles.Bold;
         text.raycastTarget = false;
+
+        textObject.AddComponent<Shadow>().effectColor = new Color(0f, 0f, 0f, 0.5f);
 
         RectTransform rect = textObject.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0.5f, 0f);
@@ -169,13 +192,31 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
         Color color)
     {
         GameObject buttonObject = CreateUIObject(objectName, parent);
-        buttonObject.transform.SetParent(parent, false);
-
         Image image = buttonObject.AddComponent<Image>();
-        image.color = color;
+        image.color = new Color(0.02f, 0.05f, 0.1f, 0.55f); // Магічне скло
+
+        Sprite roundedSprite = Resources.GetBuiltinResource<Sprite>("UI/Skin/UISprite.psd");
+        if (roundedSprite != null)
+        {
+            image.sprite = roundedSprite;
+            image.type = Image.Type.Sliced;
+            image.pixelsPerUnitMultiplier = 4f;
+        }
+
+        Outline outline = buttonObject.AddComponent<Outline>();
+        outline.effectColor = new Color(color.r, color.g, color.b, 0.8f);
+        outline.effectDistance = new Vector2(1f, -1f);
+
+        Shadow btnShadow = buttonObject.AddComponent<Shadow>();
+        btnShadow.effectColor = new Color(0f, 0f, 0f, 0.6f);
+        btnShadow.effectDistance = new Vector2(0f, -5f);
 
         Button button = buttonObject.AddComponent<Button>();
         button.targetGraphic = image;
+        
+        ButtonEnhancer enhancer = buttonObject.AddComponent<ButtonEnhancer>();
+        enhancer.themeColor = color;
+
         RectTransform buttonRect = buttonObject.GetComponent<RectTransform>();
         buttonRect.anchorMin = new Vector2(0.5f, 0f);
         buttonRect.anchorMax = new Vector2(0.5f, 0f);
@@ -183,7 +224,7 @@ public class UpgradeUIHandler : MonoBehaviour, IPointerEnterHandler, IPointerExi
         buttonRect.anchoredPosition = anchoredPosition;
         buttonRect.sizeDelta = new Vector2(180f, 46f);
 
-        TMP_Text text = CreateText(buttonObject.transform, "Label", Vector2.zero, Vector2.zero, 22f);
+        TMP_Text text = CreateText(buttonObject.transform, "Label", Vector2.zero, Vector2.zero, 24f);
         text.text = label;
         text.color = Color.white;
 

@@ -14,7 +14,13 @@ public class WinnerUI : MonoBehaviour
     void Start()
     {
         if (panel != null)
+        {
             panel.SetActive(false);
+            
+            // Автоматично додаємо ефект скла, якщо його немає
+            if (panel.GetComponent<GlassPanel>() == null)
+                panel.AddComponent<GlassPanel>();
+        }
     }
 
     public void ShowWinner(int kills, int gold, float gameTime)
@@ -24,6 +30,22 @@ public class WinnerUI : MonoBehaviour
         if (timeText != null) timeText.text = $"Time: {gameTime:F1} s";
 
         panel.SetActive(true);
+        
+        // Анімація панелі
+        CanvasGroup group = panel.GetComponent<CanvasGroup>();
+        if (group == null) group = panel.AddComponent<CanvasGroup>();
+        StartCoroutine(UIAnimator.FadeIn(group, 0.3f));
+
+        RectTransform rect = panel.GetComponent<RectTransform>();
+        if (rect != null) StartCoroutine(UIAnimator.ScaleIn(rect, 0.4f));
+
+        // Додаємо покращення кнопок (Hover/Scale)
+        foreach (UnityEngine.UI.Button btn in panel.GetComponentsInChildren<UnityEngine.UI.Button>(true))
+        {
+            if (btn.GetComponent<ButtonEnhancer>() == null)
+                btn.gameObject.AddComponent<ButtonEnhancer>();
+        }
+
         Time.timeScale = 0f;
     }
 

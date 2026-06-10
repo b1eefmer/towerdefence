@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class PulseEffect : MonoBehaviour
 {
@@ -9,7 +9,6 @@ public class PulseEffect : MonoBehaviour
     [Header("Emission")]
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private float emissionStrength = 2f;
-    [SerializeField] private float emissionSpeed = 2f;
 
     private Vector3 startScale;
     private Material mat;
