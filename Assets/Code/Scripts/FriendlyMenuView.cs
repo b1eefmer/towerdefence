@@ -15,7 +15,7 @@ public class FriendlyMenuView : MonoBehaviour
         CreateCanvas(80);
         CreateRoot(new Color(0.02f, 0.025f, 0.035f, 0.90f));
 
-        GameObject card = CreateCard(root.transform, new Vector2(600f, 520f));
+        GameObject card = CreateCard(root.transform, new Vector2(600f, 580f));
         CreateText(card.transform, "Title", "Tower Defence", new Vector2(0f, -70f), new Vector2(520f, 70f), 46f, FontStyles.Bold);
         CreateText(card.transform, "Subtitle", "Build, defend, survive", new Vector2(0f, -128f), new Vector2(520f, 36f), 24f, FontStyles.Normal);
 
@@ -23,6 +23,7 @@ public class FriendlyMenuView : MonoBehaviour
         loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -265f), new Color(0.72f, 0.44f, 0.18f, 1f), controller.LoadGame);
         CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -335f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
         CreateButton(card.transform, "Exit Button", "Exit Game", new Vector2(0f, -405f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ExitGame);
+        CreateTutorialToggle(card.transform, new Vector2(0f, -472f), controller.OnTutorialToggled);
         RefreshSaveButtons(false, SaveSystem.HasSave());
     }
 
@@ -165,6 +166,59 @@ public class FriendlyMenuView : MonoBehaviour
         rect.sizeDelta = size;
 
         return text;
+    }
+
+    private void CreateTutorialToggle(Transform parent, Vector2 anchoredPosition, UnityAction<bool> onValueChanged)
+    {
+        GameObject row = CreateUIObject("Tutorial Toggle Row", parent);
+        RectTransform rowRect = row.GetComponent<RectTransform>();
+        rowRect.anchorMin = new Vector2(0.5f, 1f);
+        rowRect.anchorMax = new Vector2(0.5f, 1f);
+        rowRect.pivot = new Vector2(0.5f, 0.5f);
+        rowRect.anchoredPosition = anchoredPosition;
+        rowRect.sizeDelta = new Vector2(320f, 40f);
+
+        // Checkbox background
+        GameObject checkObj = CreateUIObject("Checkbox", row.transform);
+        Image checkBg = checkObj.AddComponent<Image>();
+        checkBg.color = new Color(0.15f, 0.18f, 0.25f, 1f);
+        RectTransform checkRect = checkObj.GetComponent<RectTransform>();
+        checkRect.anchorMin = new Vector2(0f, 0.5f);
+        checkRect.anchorMax = new Vector2(0f, 0.5f);
+        checkRect.pivot = new Vector2(0f, 0.5f);
+        checkRect.anchoredPosition = new Vector2(0f, 0f);
+        checkRect.sizeDelta = new Vector2(28f, 28f);
+
+        // Checkmark graphic
+        GameObject checkmarkObj = CreateUIObject("Checkmark", checkObj.transform);
+        Image checkmark = checkmarkObj.AddComponent<Image>();
+        checkmark.color = new Color(0.3f, 0.85f, 0.4f, 1f);
+        RectTransform checkmarkRect = checkmarkObj.GetComponent<RectTransform>();
+        checkmarkRect.anchorMin = new Vector2(0.15f, 0.15f);
+        checkmarkRect.anchorMax = new Vector2(0.85f, 0.85f);
+        checkmarkRect.offsetMin = Vector2.zero;
+        checkmarkRect.offsetMax = Vector2.zero;
+
+        // Label (fills the row, offset past the checkbox)
+        GameObject labelObj = CreateUIObject("Label", row.transform);
+        TMP_Text label = labelObj.AddComponent<TextMeshProUGUI>();
+        label.text = "Tutorial";
+        label.alignment = TextAlignmentOptions.MidlineLeft;
+        label.color = Color.white;
+        label.fontSize = 20f;
+        label.raycastTarget = false;
+        RectTransform labelRect = labelObj.GetComponent<RectTransform>();
+        labelRect.anchorMin = Vector2.zero;
+        labelRect.anchorMax = Vector2.one;
+        labelRect.offsetMin = new Vector2(38f, 0f);
+        labelRect.offsetMax = Vector2.zero;
+
+        // Toggle component
+        Toggle toggle = row.AddComponent<Toggle>();
+        toggle.targetGraphic = checkBg;
+        toggle.graphic = checkmark;
+        toggle.isOn = PlayerPrefs.GetInt("tutorial_enabled", 1) == 1;
+        toggle.onValueChanged.AddListener(onValueChanged);
     }
 
     private GameObject CreateUIObject(string objectName, Transform parent)

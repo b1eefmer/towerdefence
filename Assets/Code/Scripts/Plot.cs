@@ -14,6 +14,10 @@ public class Plot : MonoBehaviour
     [SerializeField] private int plotId;
     public int PlotId => plotId;
 
+    public bool IsEmpty => state == PlotState.Empty;
+    public bool IsPlacing => state == PlotState.Placing;
+    public bool IsBuilt => state == PlotState.Built;
+
     [Header("References")]
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Color hoverColor;

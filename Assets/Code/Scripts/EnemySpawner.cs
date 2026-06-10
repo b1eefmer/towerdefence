@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
@@ -17,6 +18,9 @@ public class WaveDefinition
 {
     public SpawnEntry[] enemies;
     public int repeatCount = 1;
+    [Space]
+    public string warningMessage;
+    public bool showOnce;
 }
 
 public class EnemySpawner : MonoBehaviour
@@ -59,9 +63,14 @@ public class EnemySpawner : MonoBehaviour
     private int totalGoldEarned = 0;
     private float gameStartTime;
 
+    private WaveAlertUI waveAlertUI;
+    private readonly HashSet<int> shownAlerts = new HashSet<int>();
+
     public int CurrentWave => currentWave;
     public int TotalWaves => waves == null ? 0 : waves.Length;
     public bool CanSaveNow => waveState == WaveState.Idle && currentWave <= TotalWaves;
+    public bool WaveRunning => waveState == WaveState.Spawning;
+    public Button StartButton => startButton;
 
     
     public int GetTotalKills() { return totalKills; }
@@ -81,12 +90,18 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         gameStartTime = Time.time;
+
+        GameObject alertObj = new GameObject("WaveAlertUI");
+        waveAlertUI = alertObj.AddComponent<WaveAlertUI>();
+
         UpdateWaveUI();
         startButton.onClick.AddListener(StartWave);
         startButton.interactable = waves != null && waves.Length > 0;
 
         if (!startButton.interactable)
             Debug.LogError("No waves configured for EnemySpawner.");
+
+        TryShowWaveWarning(1);
     }
 
     private void Update()
@@ -237,9 +252,22 @@ public class EnemySpawner : MonoBehaviour
 
     private IEnumerator ShowStartButtonWithDelay()
     {
+        TryShowWaveWarning(currentWave);
         yield return new WaitForSeconds(timeBetweenWaves);
         startButton.interactable = true;
         startButton.gameObject.SetActive(true);
+    }
+
+    private void TryShowWaveWarning(int waveIndex)
+    {
+        if (waves == null || waveIndex < 1 || waveIndex > waves.Length) return;
+
+        WaveDefinition def = waves[waveIndex - 1];
+        if (string.IsNullOrEmpty(def.warningMessage)) return;
+        if (def.showOnce && shownAlerts.Contains(waveIndex)) return;
+
+        waveAlertUI.ShowAlert(def.warningMessage);
+        shownAlerts.Add(waveIndex);
     }
 
     private void Winner()

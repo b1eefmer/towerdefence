@@ -47,4 +47,12 @@ public class MainMenuController : MonoBehaviour
     {
         SaveSystem.LoadSavedGame();
     }
+
+    public void OnTutorialToggled(bool enabled)
+    {
+        PlayerPrefs.SetInt("tutorial_enabled", enabled ? 1 : 0);
+        if (enabled)
+            PlayerPrefs.SetInt("tut_step", 0);
+        PlayerPrefs.Save();
+    }
 }
