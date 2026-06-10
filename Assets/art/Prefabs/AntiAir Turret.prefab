@@ -287,7 +287,7 @@ MonoBehaviour:
   upgradeButton: {fileID: 584980766073283888}
   targetingRange: 6
   sectorHalfAngle: 45
-  bps: 1.5
+  bps: 2.5
   baseUpgradeCost: 100
 --- !u!82 &-8810912400620847794
 AudioSource:

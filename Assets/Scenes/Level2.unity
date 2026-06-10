@@ -17791,6 +17791,8 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 3
     repeatCount: 1
+    warningMessage:
+    showOnce: 0
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
@@ -17805,6 +17807,8 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
       pathIndex: 1
     repeatCount: 14
+    warningMessage: "! Enemy horde incoming — prepare your defenses !"
+    showOnce: 1
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
@@ -17823,6 +17827,8 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 3
     repeatCount: 1
+    warningMessage:
+    showOnce: 0
   waveText: {fileID: 75635824}
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}

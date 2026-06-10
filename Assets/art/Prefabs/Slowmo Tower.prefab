@@ -108,8 +108,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   targetingRange: 2
-  aps: 0.25
-  freezeTime: 1
+  aps: 1
+  freezeTime: 1.5
   baseUpgradeCost: 100
   slowTintColor: {r: 0.4, g: 0.8, b: 1, a: 1}
   rangeRingColor: {r: 0.4, g: 0.8, b: 1, a: 0.35}

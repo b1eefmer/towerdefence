@@ -185,7 +185,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   hitPoint: 4
-  currencyWorth: 4
+  dropsCurrency: 1
+  currencyDropValue: 20
+  currencyDropPrefab: {fileID: 6274376643775831816, guid: 8a2c26b0940855e448768678b97009ce, type: 3}
   spriteRenderer: {fileID: 7383514006656795777}
   hitColor: {r: 1, g: 1, b: 1, a: 1}
   hitFlashDuration: 0.1

@@ -15,6 +15,7 @@ public class EnemyMovement : MonoBehaviour
     private int assignedPath;
 
     private float baseSpeed;
+    public float BaseSpeed => baseSpeed;
     private Color originalColor;
 
     private BaseHealth baseHealth;

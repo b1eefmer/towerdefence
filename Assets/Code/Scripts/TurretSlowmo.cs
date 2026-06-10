@@ -87,7 +87,7 @@ public class TurretSlowmo : PlacedTower
             EnemyMovement em = hits[i].transform.GetComponent<EnemyMovement>();
             if (em == null) continue;
 
-            em.UpdateSpeed(0.5f);
+            em.UpdateSpeed(em.BaseSpeed * 0.35f);
             em.SetSlowTint(slowTintColor);
             StartCoroutine(ResetEnemySpeed(em));
         }

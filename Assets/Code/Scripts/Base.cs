@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -5,11 +6,11 @@ using System.Collections;
 public class BaseHealth : MonoBehaviour
 {
     [Header("Attributes")]
-    [SerializeField] private int maxLives = 3;
-    private int currentLives;
+    [SerializeField] private int maxHealth = 100;
+    private int currentHealth;
     private bool isGameOver = false;
 
-    [Header("UI")]
+    [Header("Legacy Hearts (auto-hidden)")]
     [SerializeField] private Image[] hearts;
 
     [Header("Effects")]
@@ -24,10 +25,15 @@ public class BaseHealth : MonoBehaviour
     [Header("Game Over")]
     [SerializeField] private GameOverUI gameOverUI;
 
+    private GameObject hpCanvas;
+    private TextMeshProUGUI hpLabel;
+
     private void Start()
     {
-        currentLives = maxLives;
-        UpdateHearts();
+        currentHealth = maxHealth;
+        HideHearts();
+        BuildHpDisplay();
+        UpdateHpDisplay();
         isGameOver = false;
     }
 
@@ -35,35 +41,88 @@ public class BaseHealth : MonoBehaviour
     {
         if (isGameOver) return;
 
-        currentLives -= amount;
-        currentLives = Mathf.Clamp(currentLives, 0, maxLives);
-        UpdateHearts();
+        currentHealth -= amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        UpdateHpDisplay();
 
         if (animator != null) animator.SetTrigger("Damage");
         if (damageSound != null) VolumeSettings.PlaySfx(damageSound);
         if (baseHitSound != null) VolumeSettings.PlaySfx(baseHitSound);
 
-        if (currentLives <= 0)
-        {
+        if (currentHealth <= 0)
             GameOver();
-        }
     }
 
     public void SetLives(int lives)
     {
-        currentLives = Mathf.Clamp(lives, 0, maxLives);
-        UpdateHearts();
+        currentHealth = Mathf.Clamp(lives, 0, maxHealth);
+        UpdateHpDisplay();
     }
 
     public int GetLives()
     {
-        return currentLives;
+        return currentHealth;
     }
 
-    private void UpdateHearts()
+    private void HideHearts()
     {
-        for (int i = 0; i < hearts.Length; i++)
-            hearts[i].gameObject.SetActive(i < currentLives);
+        if (hearts == null) return;
+        foreach (Image h in hearts)
+            if (h != null) h.gameObject.SetActive(false);
+    }
+
+    private void BuildHpDisplay()
+    {
+        hpCanvas = new GameObject("HP UI");
+
+        Canvas canvas = hpCanvas.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 90;
+
+        CanvasScaler scaler = hpCanvas.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        GameObject panel = new GameObject("Panel", typeof(RectTransform));
+        panel.transform.SetParent(hpCanvas.transform, false);
+
+        Image bg = panel.AddComponent<Image>();
+        bg.color = new Color(0.07f, 0.08f, 0.11f, 0.88f);
+
+        RectTransform panelRect = panel.GetComponent<RectTransform>();
+        panelRect.anchorMin = new Vector2(0f, 1f);
+        panelRect.anchorMax = new Vector2(0f, 1f);
+        panelRect.pivot = new Vector2(0f, 1f);
+        panelRect.anchoredPosition = new Vector2(16f, -16f);
+        panelRect.sizeDelta = new Vector2(170f, 44f);
+
+        GameObject textObj = new GameObject("Label", typeof(RectTransform));
+        textObj.transform.SetParent(panel.transform, false);
+
+        hpLabel = textObj.AddComponent<TextMeshProUGUI>();
+        hpLabel.alignment = TextAlignmentOptions.MidlineLeft;
+        hpLabel.fontSize = 24f;
+
+        RectTransform textRect = hpLabel.GetComponent<RectTransform>();
+        textRect.anchorMin = Vector2.zero;
+        textRect.anchorMax = Vector2.one;
+        textRect.offsetMin = new Vector2(12f, 0f);
+        textRect.offsetMax = new Vector2(-6f, 0f);
+    }
+
+    private void UpdateHpDisplay()
+    {
+        if (hpLabel == null) return;
+        float frac = (float)currentHealth / maxHealth;
+        hpLabel.color = frac > 0.35f ? Color.white : new Color(1f, 0.3f, 0.2f, 1f);
+        hpLabel.text = $"HP  {currentHealth} / {maxHealth}";
+    }
+
+    private void OnDestroy()
+    {
+        if (hpCanvas != null)
+            Destroy(hpCanvas);
     }
 
     private void GameOver()
@@ -71,15 +130,12 @@ public class BaseHealth : MonoBehaviour
         if (isGameOver) return;
         isGameOver = true;
 
-        Debug.Log("GAME OVER");
-
         EnemySpawner spawner = FindObjectOfType<EnemySpawner>();
         int totalKills = 0;
         int totalGold = 0;
         float gameTime = 0f;
         if (spawner != null)
         {
-            
             totalKills = spawner.GetTotalKills();
             totalGold = spawner.GetTotalGold();
             gameTime = spawner.GetGameTime();
