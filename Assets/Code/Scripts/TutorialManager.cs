@@ -204,7 +204,7 @@ public class TutorialManager : MonoBehaviour
         panel.transform.SetParent(tutorialCanvas.transform, false);
 
         panelBg = panel.AddComponent<Image>();
-        panelBg.color = new Color(0.07f, 0.08f, 0.11f, 0.92f);
+        panelBg.color = new Color(0.082f, 0.075f, 0.165f, 0.92f);
 
         panelRect = panel.GetComponent<RectTransform>();
         panelRect.anchorMin = new Vector2(0.5f, 0f);

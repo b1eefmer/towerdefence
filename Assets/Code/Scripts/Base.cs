@@ -88,7 +88,7 @@ public class BaseHealth : MonoBehaviour
         panel.transform.SetParent(hpCanvas.transform, false);
 
         Image bg = panel.AddComponent<Image>();
-        bg.color = new Color(0.07f, 0.08f, 0.11f, 0.88f);
+        bg.color = new Color(0.082f, 0.075f, 0.165f, 0.92f);
 
         RectTransform panelRect = panel.GetComponent<RectTransform>();
         panelRect.anchorMin = new Vector2(0f, 1f);
@@ -115,7 +115,7 @@ public class BaseHealth : MonoBehaviour
     {
         if (hpLabel == null) return;
         float frac = (float)currentHealth / maxHealth;
-        hpLabel.color = frac > 0.35f ? Color.white : new Color(1f, 0.3f, 0.2f, 1f);
+        hpLabel.color = frac > 0.35f ? Color.white : new Color(0.8f, 0.12f, 0.05f, 1f);
         hpLabel.text = $"HP  {currentHealth} / {maxHealth}";
     }
 

@@ -13,16 +13,16 @@ public class FriendlyMenuView : MonoBehaviour
     public void BuildMainMenu(MainMenuController controller, VolumeSettingsPanel volumePanel)
     {
         CreateCanvas(80);
-        CreateRoot(new Color(0.02f, 0.025f, 0.035f, 0.90f));
+        CreateRoot(new Color(0.055f, 0.051f, 0.102f, 0.97f));
 
         GameObject card = CreateCard(root.transform, new Vector2(600f, 580f));
-        CreateText(card.transform, "Title", "Tower Defence", new Vector2(0f, -70f), new Vector2(520f, 70f), 46f, FontStyles.Bold);
-        CreateText(card.transform, "Subtitle", "Build, defend, survive", new Vector2(0f, -128f), new Vector2(520f, 36f), 24f, FontStyles.Normal);
+        CreateText(card.transform, "Title", "The Stolen Soul", new Vector2(0f, -70f), new Vector2(520f, 70f), 42f, FontStyles.Bold);
+        CreateText(card.transform, "Subtitle", "Your land. Your soul. Your stand.", new Vector2(0f, -128f), new Vector2(520f, 36f), 20f, FontStyles.Normal);
 
-        CreateButton(card.transform, "Start Button", "Start Game", new Vector2(0f, -195f), new Color(0.20f, 0.58f, 0.28f, 1f), controller.StartGame);
-        loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -265f), new Color(0.72f, 0.44f, 0.18f, 1f), controller.LoadGame);
-        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -335f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
-        CreateButton(card.transform, "Exit Button", "Exit Game", new Vector2(0f, -405f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ExitGame);
+        CreateButton(card.transform, "Start Button", "Begin Defense", new Vector2(0f, -195f), new Color(0.55f, 0.40f, 0.08f, 1f), controller.StartGame);
+        loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -265f), new Color(0.18f, 0.14f, 0.35f, 1f), controller.LoadGame);
+        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -335f), new Color(0.18f, 0.14f, 0.35f, 1f), volumePanel.Open);
+        CreateButton(card.transform, "Exit Button", "Abandon", new Vector2(0f, -405f), new Color(0.45f, 0.08f, 0.05f, 1f), controller.ExitGame);
         CreateTutorialToggle(card.transform, new Vector2(0f, -472f), controller.OnTutorialToggled);
         RefreshSaveButtons(false, SaveSystem.HasSave());
     }
@@ -30,18 +30,18 @@ public class FriendlyMenuView : MonoBehaviour
     public void BuildPauseMenu(PauseMenuController controller, VolumeSettingsPanel volumePanel)
     {
         CreateCanvas(90);
-        CreateRoot(new Color(0f, 0f, 0f, 0.72f));
+        CreateRoot(new Color(0.025f, 0.020f, 0.060f, 0.88f));
 
         GameObject card = CreateCard(root.transform, new Vector2(560f, 560f));
         CreateText(card.transform, "Title", "Paused", new Vector2(0f, -70f), new Vector2(500f, 64f), 44f, FontStyles.Bold);
-        CreateText(card.transform, "Subtitle", "Take a breath, commander", new Vector2(0f, -124f), new Vector2(500f, 34f), 22f, FontStyles.Normal);
+        CreateText(card.transform, "Subtitle", "The crusaders wait...", new Vector2(0f, -124f), new Vector2(500f, 34f), 22f, FontStyles.Normal);
 
-        CreateButton(card.transform, "Continue Button", "Continue", new Vector2(0f, -176f), new Color(0.20f, 0.58f, 0.28f, 1f), controller.ResumeGame);
-        saveButton = CreateButton(card.transform, "Save Button", "Save Game", new Vector2(0f, -238f), new Color(0.72f, 0.44f, 0.18f, 1f), controller.SaveGame);
-        loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -300f), new Color(0.20f, 0.36f, 0.62f, 1f), controller.LoadGame);
-        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -362f), new Color(0.20f, 0.36f, 0.62f, 1f), volumePanel.Open);
-        CreateButton(card.transform, "Restart Button", "Restart Level", new Vector2(0f, -424f), new Color(0.44f, 0.36f, 0.20f, 1f), controller.RestartLevel);
-        CreateButton(card.transform, "Main Menu Button", "Main Menu", new Vector2(0f, -486f), new Color(0.60f, 0.22f, 0.22f, 1f), controller.ReturnToMainMenu);
+        CreateButton(card.transform, "Continue Button", "Continue", new Vector2(0f, -176f), new Color(0.55f, 0.40f, 0.08f, 1f), controller.ResumeGame);
+        saveButton = CreateButton(card.transform, "Save Button", "Save Game", new Vector2(0f, -238f), new Color(0.18f, 0.14f, 0.35f, 1f), controller.SaveGame);
+        loadButton = CreateButton(card.transform, "Load Button", "Load Game", new Vector2(0f, -300f), new Color(0.18f, 0.14f, 0.35f, 1f), controller.LoadGame);
+        CreateButton(card.transform, "Audio Button", "Audio Settings", new Vector2(0f, -362f), new Color(0.18f, 0.14f, 0.35f, 1f), volumePanel.Open);
+        CreateButton(card.transform, "Restart Button", "Restart Level", new Vector2(0f, -424f), new Color(0.18f, 0.14f, 0.35f, 1f), controller.RestartLevel);
+        CreateButton(card.transform, "Main Menu Button", "Main Menu", new Vector2(0f, -486f), new Color(0.45f, 0.08f, 0.05f, 1f), controller.ReturnToMainMenu);
 
         SetVisible(false);
     }
@@ -95,7 +95,7 @@ public class FriendlyMenuView : MonoBehaviour
     {
         GameObject card = CreateUIObject("Menu Card", parent);
         Image image = card.AddComponent<Image>();
-        image.color = new Color(0.07f, 0.08f, 0.11f, 0.96f);
+        image.color = new Color(0.082f, 0.075f, 0.165f, 0.96f);
 
         RectTransform rect = card.GetComponent<RectTransform>();
         rect.anchorMin = new Vector2(0.5f, 0.5f);

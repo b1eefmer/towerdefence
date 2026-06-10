@@ -14,7 +14,7 @@ public class WaveAlertUI : MonoBehaviour
 
     private const float PanelHeight = 110f;
     private const float ShownY = -16f;
-    private static readonly Color AccentColor = new Color(0.95f, 0.65f, 0.1f, 1f);
+    private static readonly Color AccentColor = new Color(0.831f, 0.659f, 0.263f, 1f);
 
     private void Awake()
     {
@@ -38,7 +38,7 @@ public class WaveAlertUI : MonoBehaviour
         panelObj.transform.SetParent(transform, false);
 
         Image bg = panelObj.AddComponent<Image>();
-        bg.color = new Color(0.07f, 0.08f, 0.11f, 0.95f);
+        bg.color = new Color(0.082f, 0.075f, 0.165f, 0.95f);
 
         Outline outline = panelObj.AddComponent<Outline>();
         outline.effectColor = new Color(AccentColor.r, AccentColor.g, AccentColor.b, 0.55f);
@@ -66,7 +66,7 @@ public class WaveAlertUI : MonoBehaviour
         GameObject headerObj = new GameObject("Header");
         headerObj.transform.SetParent(panelObj.transform, false);
         TextMeshProUGUI header = headerObj.AddComponent<TextMeshProUGUI>();
-        header.text = "▲   INCOMING";
+        header.text = "✦  CRUSADERS ADVANCE";
         header.alignment = TextAlignmentOptions.Center;
         header.color = AccentColor;
         header.fontSize = 13f;
