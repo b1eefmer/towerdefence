@@ -3534,7 +3534,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MENU
+  m_text: SHOP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -15611,7 +15611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &950266795
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24221,6 +24221,8 @@ MonoBehaviour:
     - {fileID: 1272967735}
     - {fileID: 1598517966}
     - {fileID: 783284576}
+  startingCurrency: 10000
+  minimumStartingCurrency: 0
   currency: 0
 --- !u!4 &1335786079
 Transform:
@@ -24307,6 +24309,7 @@ MonoBehaviour:
       pathIndex: 0
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
+    repeatCount: 1
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
@@ -24338,6 +24341,7 @@ MonoBehaviour:
       pathIndex: 1
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
+    repeatCount: 1
   waveText: {fileID: 75635824}
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}

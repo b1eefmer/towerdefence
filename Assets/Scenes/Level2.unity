@@ -12049,7 +12049,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &950266795
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17790,6 +17790,7 @@ MonoBehaviour:
       pathIndex: 2
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 3
+    repeatCount: 1
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
@@ -17821,6 +17822,7 @@ MonoBehaviour:
       pathIndex: 2
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 3
+    repeatCount: 1
   waveText: {fileID: 75635824}
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}

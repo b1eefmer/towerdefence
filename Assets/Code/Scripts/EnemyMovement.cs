@@ -15,12 +15,17 @@ public class EnemyMovement : MonoBehaviour
     private int assignedPath;
 
     private float baseSpeed;
+    private Color originalColor;
 
-    private BaseHealth baseHealth; 
+    private BaseHealth baseHealth;
 
     void Start()
     {
         baseSpeed = moveSpeed;
+
+        if (spriteRenderer != null)
+            originalColor = spriteRenderer.color;
+
         path = LevelMananger.main.GetPath(assignedPath);
         if (path == null || path.Length == 0)
         {
@@ -94,5 +99,17 @@ public class EnemyMovement : MonoBehaviour
     public void ResetSpeed()
     {
         moveSpeed = baseSpeed;
+    }
+
+    public void SetSlowTint(Color tint)
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.color = tint;
+    }
+
+    public void ClearSlowTint()
+    {
+        if (spriteRenderer != null)
+            spriteRenderer.color = originalColor;
     }
 }
