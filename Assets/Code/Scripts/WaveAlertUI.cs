@@ -5,15 +5,16 @@ using UnityEngine.UI;
 
 public class WaveAlertUI : MonoBehaviour
 {
-    [SerializeField] private float holdDuration = 2.5f;
-    [SerializeField] private float slideInDuration = 0.25f;
+    [SerializeField] private float holdDuration = 4f;
+    [SerializeField] private float slideInDuration = 0.3f;
     [SerializeField] private float slideOutDuration = 0.25f;
-    [SerializeField] private Color panelColor = new Color(0.75f, 0.15f, 0.1f, 0.9f);
-    [SerializeField] private Color labelColor = Color.white;
 
     private RectTransform panelRect;
-    private TextMeshProUGUI label;
-    private const float PanelHeight = 90f;
+    private TextMeshProUGUI messageLabel;
+
+    private const float PanelHeight = 110f;
+    private const float ShownY = -16f;
+    private static readonly Color AccentColor = new Color(0.95f, 0.65f, 0.1f, 1f);
 
     private void Awake()
     {
@@ -26,41 +27,78 @@ public class WaveAlertUI : MonoBehaviour
         Canvas canvas = gameObject.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.sortingOrder = 100;
-        gameObject.AddComponent<CanvasScaler>();
 
+        CanvasScaler scaler = gameObject.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+        scaler.matchWidthOrHeight = 0.5f;
+
+        // Main panel — dark, centered, not full-width
         GameObject panelObj = new GameObject("Panel");
         panelObj.transform.SetParent(transform, false);
 
         Image bg = panelObj.AddComponent<Image>();
-        bg.color = panelColor;
+        bg.color = new Color(0.07f, 0.08f, 0.11f, 0.95f);
+
+        Outline outline = panelObj.AddComponent<Outline>();
+        outline.effectColor = new Color(AccentColor.r, AccentColor.g, AccentColor.b, 0.55f);
+        outline.effectDistance = new Vector2(0f, -2f);
 
         panelRect = panelObj.GetComponent<RectTransform>();
-        panelRect.anchorMin = new Vector2(0f, 1f);
-        panelRect.anchorMax = new Vector2(1f, 1f);
+        panelRect.anchorMin = new Vector2(0.5f, 1f);
+        panelRect.anchorMax = new Vector2(0.5f, 1f);
         panelRect.pivot = new Vector2(0.5f, 1f);
-        panelRect.sizeDelta = new Vector2(0f, PanelHeight);
+        panelRect.sizeDelta = new Vector2(640f, PanelHeight);
 
-        GameObject textObj = new GameObject("Label");
+        // Left amber stripe
+        GameObject stripeObj = new GameObject("Stripe");
+        stripeObj.transform.SetParent(panelObj.transform, false);
+        Image stripe = stripeObj.AddComponent<Image>();
+        stripe.color = AccentColor;
+        RectTransform stripeRect = stripeObj.GetComponent<RectTransform>();
+        stripeRect.anchorMin = new Vector2(0f, 0f);
+        stripeRect.anchorMax = new Vector2(0f, 1f);
+        stripeRect.pivot = new Vector2(0f, 0.5f);
+        stripeRect.anchoredPosition = Vector2.zero;
+        stripeRect.sizeDelta = new Vector2(5f, 0f);
+
+        // Small header
+        GameObject headerObj = new GameObject("Header");
+        headerObj.transform.SetParent(panelObj.transform, false);
+        TextMeshProUGUI header = headerObj.AddComponent<TextMeshProUGUI>();
+        header.text = "▲   INCOMING";
+        header.alignment = TextAlignmentOptions.Center;
+        header.color = AccentColor;
+        header.fontSize = 13f;
+        header.fontStyle = FontStyles.Bold;
+        header.raycastTarget = false;
+        RectTransform headerRect = headerObj.GetComponent<RectTransform>();
+        headerRect.anchorMin = new Vector2(0f, 1f);
+        headerRect.anchorMax = new Vector2(1f, 1f);
+        headerRect.pivot = new Vector2(0.5f, 1f);
+        headerRect.anchoredPosition = new Vector2(0f, -10f);
+        headerRect.sizeDelta = new Vector2(0f, 20f);
+
+        // Message
+        GameObject textObj = new GameObject("Message");
         textObj.transform.SetParent(panelObj.transform, false);
-
-        label = textObj.AddComponent<TextMeshProUGUI>();
-        label.alignment = TextAlignmentOptions.Center;
-        label.color = labelColor;
-        label.fontSize = 26;
-        label.fontStyle = FontStyles.Bold;
-        label.margin = new Vector4(10f, 0f, 10f, 0f);
-
-        RectTransform textRect = label.GetComponent<RectTransform>();
-        textRect.anchorMin = Vector2.zero;
-        textRect.anchorMax = Vector2.one;
-        textRect.offsetMin = Vector2.zero;
-        textRect.offsetMax = Vector2.zero;
+        messageLabel = textObj.AddComponent<TextMeshProUGUI>();
+        messageLabel.alignment = TextAlignmentOptions.Center;
+        messageLabel.color = Color.white;
+        messageLabel.fontSize = 24f;
+        messageLabel.fontStyle = FontStyles.Bold;
+        messageLabel.raycastTarget = false;
+        RectTransform textRect = messageLabel.GetComponent<RectTransform>();
+        textRect.anchorMin = new Vector2(0f, 0f);
+        textRect.anchorMax = new Vector2(1f, 1f);
+        textRect.offsetMin = new Vector2(16f, 8f);
+        textRect.offsetMax = new Vector2(-16f, -36f);
     }
 
     public void ShowAlert(string message)
     {
         StopAllCoroutines();
-        label.text = message;
+        messageLabel.text = message;
         StartCoroutine(AlertRoutine());
     }
 
@@ -69,18 +107,18 @@ public class WaveAlertUI : MonoBehaviour
         float t = 0f;
         while (t < slideInDuration)
         {
-            SetPanelY(Mathf.Lerp(PanelHeight, 0f, Mathf.SmoothStep(0f, 1f, t / slideInDuration)));
+            SetPanelY(Mathf.Lerp(PanelHeight, ShownY, Mathf.SmoothStep(0f, 1f, t / slideInDuration)));
             t += Time.deltaTime;
             yield return null;
         }
-        SetPanelY(0f);
+        SetPanelY(ShownY);
 
         yield return new WaitForSeconds(holdDuration);
 
         t = 0f;
         while (t < slideOutDuration)
         {
-            SetPanelY(Mathf.Lerp(0f, PanelHeight, Mathf.SmoothStep(0f, 1f, t / slideOutDuration)));
+            SetPanelY(Mathf.Lerp(ShownY, PanelHeight, Mathf.SmoothStep(0f, 1f, t / slideOutDuration)));
             t += Time.deltaTime;
             yield return null;
         }

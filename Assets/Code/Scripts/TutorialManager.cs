@@ -13,7 +13,7 @@ public class TutorialManager : MonoBehaviour
         "Select a platform to place your first tower",
         "Aim with W / A / S / D,  then press ENTER to place",
         "Press  START WAVE  to begin",
-        "Collect coins dropped by defeated enemies — they disappear over time!"
+        "Collect coins — they disappear over time!"
     };
 
     [SerializeField] private int tutorialPlotId = 125;
@@ -111,9 +111,7 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case 3:
-                if (panelRect != null)
-                    panelRect.anchoredPosition = new Vector2(0f, -PanelHeight);
-                StartCoroutine(DelayedComplete(10f));
+                StartCoroutine(DelayedComplete(15f));
                 break;
         }
     }
@@ -139,37 +137,7 @@ public class TutorialManager : MonoBehaviour
 
     private IEnumerator DelayedComplete(float seconds)
     {
-        const float slideDuration = 0.3f;
-        const float targetY = 20f;
-
-        if (panelBg != null)
-        {
-            panelBg.color = new Color(0.95f, 0.78f, 0.05f, 0.95f);
-            instructionLabel.color = new Color(0.08f, 0.05f, 0f, 1f);
-        }
-
-        float t = 0f;
-        while (t < slideDuration)
-        {
-            if (panelRect != null)
-                panelRect.anchoredPosition = new Vector2(0f, Mathf.Lerp(-PanelHeight, targetY, t / slideDuration));
-            t += Time.deltaTime;
-            yield return null;
-        }
-        if (panelRect != null)
-            panelRect.anchoredPosition = new Vector2(0f, targetY);
-
         yield return new WaitForSeconds(seconds);
-
-        t = 0f;
-        while (t < slideDuration)
-        {
-            if (panelRect != null)
-                panelRect.anchoredPosition = new Vector2(0f, Mathf.Lerp(targetY, -PanelHeight, t / slideDuration));
-            t += Time.deltaTime;
-            yield return null;
-        }
-
         CompleteTutorial();
     }
 

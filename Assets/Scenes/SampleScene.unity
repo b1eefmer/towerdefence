@@ -3865,7 +3865,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0907dfa06c1e3f6428953d8a460a1820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseHealth
-  maxLives: 4
+  maxHealth: 100
   hearts:
   - {fileID: 1880332643}
   - {fileID: 1149317351}
@@ -24150,8 +24150,8 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
     repeatCount: 1
-    warningMessage: 
-    showOnce: 0
+    warningMessage: "! Enemies on both paths !"
+    showOnce: 1
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
@@ -40154,7 +40154,7 @@ PrefabInstance:
       objectReference: {fileID: 1042383358}
     - target: {fileID: 1491188212518749669, guid: 920e1a4cbef7a7e4e8116d171232eb9b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1491188212518749669, guid: 920e1a4cbef7a7e4e8116d171232eb9b, type: 3}
       propertyPath: m_SpriteTilingProperty.border.w
