@@ -41,9 +41,6 @@ public class WinnerUI : MonoBehaviour
             return;
         }
 
-        if (nextLevelSceneName == "Level2")
-            LevelMananger.main.IncreaseCurrency(1000);
-
         LevelMananger.main.CarryCurrencyToNextLevel();
         Time.timeScale = 1f;
 

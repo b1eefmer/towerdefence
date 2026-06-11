@@ -3159,7 +3159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0907dfa06c1e3f6428953d8a460a1820, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseHealth
-  maxHealth: 100
+  maxHealth: 10
   hearts:
   - {fileID: 1880332643}
   - {fileID: 1149317351}
@@ -17990,11 +17990,7 @@ MonoBehaviour:
       pathIndex: 0
     - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
       pathIndex: 1
-    - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
-      pathIndex: 2
-    - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
-      pathIndex: 3
-    repeatCount: 1
+    repeatCount: 5
     warningMessage: 
     showOnce: 0
   - enemies:
@@ -18011,18 +18007,46 @@ MonoBehaviour:
     - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
       pathIndex: 1
     repeatCount: 14
-    warningMessage: "! Enemy horde incoming \u2014 prepare your defenses !"
+    warningMessage: "! Enemy horde incoming !"
     showOnce: 1
   - enemies:
     - enemyPrefab: {fileID: 2929124418947253556, guid: f262ce779a1a70e4eb79b73282e82e1a, type: 3}
       pathIndex: 0
-    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
       pathIndex: 1
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 2
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 3
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 0
     - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
+      pathIndex: 0
+    repeatCount: 18
+    warningMessage: "! More units incoming !"
+    showOnce: 1
+  - enemies:
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
+      pathIndex: 2
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
+      pathIndex: 3
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
+      pathIndex: 1
+    repeatCount: 23
+    warningMessage: "! Tank squad advancing !"
+    showOnce: 1
+  - enemies:
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
+      pathIndex: 0
+    - enemyPrefab: {fileID: 2929124418947253556, guid: 3df6505c2ca86ba46a61a8e7140a8956, type: 3}
+      pathIndex: 1
+    - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
       pathIndex: 0
     - enemyPrefab: {fileID: 2929124418947253556, guid: b06457c1c2521714fa759a9ea6079c65, type: 3}
       pathIndex: 1
@@ -18030,9 +18054,9 @@ MonoBehaviour:
       pathIndex: 2
     - enemyPrefab: {fileID: 2929124418947253556, guid: 4f41d995d28544a88a0673cde29b1b48, type: 3}
       pathIndex: 3
-    repeatCount: 1
-    warningMessage: 
-    showOnce: 0
+    repeatCount: 30
+    warningMessage: "! FINAL WAVE - no mercy !"
+    showOnce: 1
   waveText: {fileID: 75635824}
   startButton: {fileID: 1282793299}
   winnerUI: {fileID: 694028809}

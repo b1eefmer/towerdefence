@@ -94,7 +94,7 @@ public class BaseHealth : MonoBehaviour
         panelRect.anchorMin = new Vector2(0f, 1f);
         panelRect.anchorMax = new Vector2(0f, 1f);
         panelRect.pivot = new Vector2(0f, 1f);
-        panelRect.anchoredPosition = new Vector2(16f, -16f);
+        panelRect.anchoredPosition = new Vector2(400f, -16f);
         panelRect.sizeDelta = new Vector2(170f, 44f);
 
         GameObject textObj = new GameObject("Label", typeof(RectTransform));
