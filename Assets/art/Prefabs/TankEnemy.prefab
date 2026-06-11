@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4876478217435782574}
   - component: {fileID: -4150978866968794343}
   - component: {fileID: -1730130295177453762}
+  - component: {fileID: 5500000000000000002}
   m_Layer: 6
   m_Name: TankEnemy
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 7, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 1.6, y: 1.6, z: 1.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5593381149061054219, guid: 52a97239393992440b2d33d20b7b2a66, type: 3}
+  m_Sprite: {fileID: 4696390487777939690, guid: f6fded449712b234c99e0fd2a494c153, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -171,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   rb: {fileID: -5415581309653117769}
+  spriteRenderer: {fileID: 7383514006656795777}
   moveSpeed: 2.5
 --- !u!114 &-1730130295177453762
 MonoBehaviour:
@@ -192,6 +194,26 @@ MonoBehaviour:
   hitColor: {r: 1, g: 1, b: 1, a: 1}
   hitFlashDuration: 0.1
   hitSparkPrefab: {fileID: 1646406499724943997, guid: 8bd843ad75f57e94fac206b24597398e, type: 3}
-  floatingTextPrefab: {fileID: 0}
   hitSound: {fileID: 0}
   deathSound: {fileID: 0}
+--- !u!114 &5500000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2929124418947253556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b8fc1a91918442f9b7266a0f79cb8a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  spriteRenderer: {fileID: 7383514006656795777}
+  rb: {fileID: -5415581309653117769}
+  frames:
+  - {fileID: 4696390487777939690, guid: f6fded449712b234c99e0fd2a494c153, type: 3}
+  - {fileID: 1814246211630554087, guid: f6fded449712b234c99e0fd2a494c153, type: 3}
+  - {fileID: 7155422347894854414, guid: f6fded449712b234c99e0fd2a494c153, type: 3}
+  - {fileID: 4603190896903909921, guid: f6fded449712b234c99e0fd2a494c153, type: 3}
+  framesPerSecond: 8
+  animateOnlyWhenMoving: 1
